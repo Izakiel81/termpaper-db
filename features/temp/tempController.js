@@ -1,9 +1,17 @@
 import tempService from "./tempService.js";
 class tempController {
+  async getUsers(req, res, next) {
+    try {
+      const users = await tempService.getUsers();
+      res.status(200).json({ users: users.rows, users_count: users.rowCount });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
   async createData(req, res, next) {
     try {
-      const users = tempService.createDataSet();
-      console.log(users);
+      const users = await tempService.createDataSet();
+      res.status(200).json({ users });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
