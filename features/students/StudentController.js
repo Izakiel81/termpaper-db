@@ -106,7 +106,7 @@ class StudentController {
     }
   }
 
-  async addUser(req, res, next) {
+  async addStudent(req, res, next) {
     try {
       const { name, surname, patronym, phone, class_c } = req.body;
       const newStudent = await studentService.addStudent(
