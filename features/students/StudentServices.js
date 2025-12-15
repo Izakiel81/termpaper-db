@@ -87,4 +87,4 @@ class StudentServives {
     await pool.query(`CALL proc_delete_student($1::integer)`, [id]);
   }
 }
-export default StudentServives;
+export default new StudentServives();
