@@ -8,12 +8,12 @@ class StudentServives {
 
   // Views
 
-  async getStudxentsAVGAbove7() {
+  async getStudentsAVGAbove7() {
     const students = await pool.query(`SELECT * FROM students_avg_above_7`);
 
     return students.rows;
   }
-  async getUsersByClass() {
+  async getStudentsByClass() {
     const students = await pool.query(`SELECT * FROM students_by_class`);
 
     return students.rows;
