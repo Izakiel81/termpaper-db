@@ -16,6 +16,15 @@ class tempController {
       res.status(400).json({ error: error.message });
     }
   }
+  async assignRoles(req, res, next) {
+    try {
+      const { startFrom, roleId } = req.body;
+      const roles = await tempService.assignRoles(startFrom, roleId);
+      res.status(200).json({ result: roles });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default new tempController();
