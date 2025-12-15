@@ -1,4 +1,4 @@
-import pool from "./db.js";
+import pool from "../../lib/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -8,13 +8,13 @@ const REFRESH_TOKEN_EXPIRES = "7d";
 class AuthService {
   async login(username, email, password) {
     const result = await pool.query(
-      "SELECT username, password FROM api_users WHERE username = $1 OR email = $2",
+      "SELECT username, password FROM users WHERE username = $1 OR email = $2",
       [username, email],
     );
 
-    if (result.length === 0) throw new Error("Invalid credentials");
+    if (result.rowCount === 0) throw new Error("Invalid credentials");
 
-    const user = result[0];
+    const user = result.rows[0];
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) throw new Error("Invalid credentials");
 
