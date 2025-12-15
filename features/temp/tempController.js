@@ -25,6 +25,14 @@ class tempController {
       res.status(400).json({ error: error.message });
     }
   }
+  async assignUserToEntity(req, res, next) {
+    try {
+      const entities = await tempService.assignUsersToEntities();
+      res.status(200).json({ result: entities });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default new tempController();

@@ -6,6 +6,7 @@ class TempService {
 
     return users;
   }
+
   async createDataSet() {
     const users = await pool.query(`SELECT * FROM parents`);
 
@@ -20,7 +21,7 @@ class TempService {
         let password = await tempUtils.hashPassword(
           tempUtils.generatePassword(),
         );
-        return pool.query(
+        await pool.query(
           `CALL proc_create_user($1::character varying, $2::character varying, $3::character varying, null)`,
           [
             u.parent_surname + u.parent_name + u.parent_patronym,
@@ -57,6 +58,22 @@ class TempService {
       }),
     );
     const result = await pool.query(`SELECT * FROM userrole`);
+    return result.rows;
+  }
+
+  async assignUsersToEntities(startFrom = 0) {
+    const users = await pool.query(`SELECT * FROM users`);
+    const parents = await pool.query(`SELECT * FROM parents`);
+
+    Promise.all(
+      users.rows.slice(startFrom).map((u, i) => {
+        return pool.query(
+          `CALL proc_assign_user_to_entity($1::integer, 'parent'::text, $2::integer)`,
+          [u.user_id, parents.rows[i].parent_id],
+        );
+      }),
+    );
+    const result = await pool.query(`SELECT * FROM parents`);
     return result.rows;
   }
 }
