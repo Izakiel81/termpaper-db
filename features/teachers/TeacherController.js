@@ -1,6 +1,6 @@
 import teacherService from "./TeacherService.js";
 class TeacherController {
-  async getTeacher(req, res, next) {
+  static async getTeacher(req, res, next) {
     try {
       const teachers = await teacherService.getTeacher();
 
@@ -10,7 +10,7 @@ class TeacherController {
     }
   }
 
-  async getTeacherById(req, res, next) {
+  static async getTeacherById(req, res, next) {
     try {
       const { id } = req.params;
 
@@ -21,7 +21,7 @@ class TeacherController {
     }
   }
 
-  async getTeacherWithClasses(req, res, next) {
+  static async getTeacherWithClasses(req, res, next) {
     try {
       const teachers = teacherService.getTeacherWithClasses();
       res.status(200).json({ teachers });
@@ -30,7 +30,7 @@ class TeacherController {
     }
   }
 
-  async getTeacherSalary(req, res, next) {
+  static async getTeacherSalary(req, res, next) {
     try {
       const { teacherId, fromDate, toDate } = req.query;
       const teachers = teacherService.getTeacherSalary(
@@ -44,7 +44,7 @@ class TeacherController {
     }
   }
 
-  async addTeacher(req, res, next) {
+  static async addTeacher(req, res, next) {
     try {
       const { name, surname, patronym, phone } = req.body;
       const newTeacher = await teacherService.addTeacher(
@@ -58,7 +58,7 @@ class TeacherController {
       res.status(400).json({ error: error.message });
     }
   }
-  async updateTeacher(req, res, next) {
+  static async updateTeacher(req, res, next) {
     try {
       const { id, name, surname, patronym, phone } = req.body;
       await teacherService.updateTeacher(id, name, surname, patronym, phone);
@@ -69,7 +69,7 @@ class TeacherController {
       res.status(400).json({ error: error.message });
     }
   }
-  async deleteTeacher(req, res, next) {
+  static async deleteTeacher(req, res, next) {
     try {
       const { id } = req.params;
       await teacherService.deleteTeacher(id);
@@ -81,4 +81,4 @@ class TeacherController {
     }
   }
 }
-export default new TeacherController();
+export default TeacherController;
