@@ -1,46 +1,69 @@
-import pool from "../../lib/db.js";
+import UserModel from "../../lib/models/UserModel.js";
+
 class UserService {
-  async getUsers() {
-    const users = await pool.query(`SELECT * FROM users`);
-
-    return users.rows;
+  static async getAllUsers() {
+    try {
+      const users = await UserModel.findAll();
+      return { users };
+    } catch (error) {
+      console.error("Service Error in getAllUsers:", error.message);
+      throw error;
+    }
   }
 
-  async getUserById(id) {
-    const user = await pool.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
-
-    return user.rows;
+  static async getUserById(userId) {
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+      return { user };
+    } catch (error) {
+      console.error("Service Error in getUserById:", error.message);
+      throw error;
+    }
   }
 
-  // Functions
-
-  async getUserRole(user_id) {
-    const userRole = await pool.query(
-      `SELECT * FROM get_user_role($1::integer)`,
-      [user_id],
-    );
-
-    return userRole.rows;
+  static async createUser(username, email, password) {
+    try {
+      const userId = await UserModel.create(username, email, password);
+      return { userId, message: "User created successfully" };
+    } catch (error) {
+      console.error("Service Error in createUser:", error.message);
+      throw error;
+    }
   }
 
-  // Procedures
-
-  async addUser(username, email, password) {
-    const newUser = await pool.query(
-      `CALL proc_create_user($1::character varying, $2::character varying, $3::character varying)`,
-      [username, email, password],
-    );
-
-    return newUser.rows[0].new_user_id;
+  static async updateUser(userId, username, email, password) {
+    try {
+      await UserModel.update(userId, username, email, password);
+      return { message: "User updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateUser:", error.message);
+      throw error;
+    }
   }
-  async updateUser(id, username, email, password) {
-    await pool.query(
-      `CALL proc_update_user($1::integer, $2::character varying, $3::character varying, $4::character varying)`,
-      [id, username, email, password],
-    );
+
+  static async deleteUser(userId) {
+    try {
+      await UserModel.delete(userId);
+      return { message: `User ${userId} deleted successfully` };
+    } catch (error) {
+      console.error("Service Error in deleteUser:", error.message);
+      throw error;
+    }
   }
-  async deleteUser(id) {
-    await pool.query(`CALL proc_delete_user($1::integer)`, [id]);
+
+  static async resetPassword(userId, newPassword) {
+    try {
+      await UserModel.reset_password(userId, newPassword);
+      return { message: "Password reset successfully" };
+    } catch (error) {
+      console.error("Service Error in resetPassword:", error.message);
+      throw error;
+    }
   }
 }
-export default new UserService();
+
+export default UserService;
+

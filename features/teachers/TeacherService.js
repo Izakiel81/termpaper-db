@@ -1,79 +1,82 @@
-import pool from "../../lib/db.js";
 import TeacherModel from "../../lib/models/TeacherModel.js";
+
 class TeacherService {
-  static async getTeacher() {
+  static async getAllTeachers() {
     try {
       const teachers = await TeacherModel.findAll();
-      return teachers;
-    }
-    catch (error) {
-        console.error({ error: error.message });
+      return { teachers };
+    } catch (error) {
+      console.error("Service Error in getAllTeachers:", error.message);
+      throw error;
     }
   }
 
-  static async getTeacherById(id) {
+  static async getTeacherById(teacherId) {
     try {
-      const teacher = await TeacherModel.findById(id);
-      return teacher;
-    }
-    catch (error) {
-        console.error({ error: error.message });
+      const teacher = await TeacherModel.findById(teacherId);
+      if (!teacher) {
+        throw new Error(`Teacher with ID ${teacherId} not found`);
+      }
+      return { teacher };
+    } catch (error) {
+      console.error("Service Error in getTeacherById:", error.message);
+      throw error;
     }
   }
 
-  // Views
-
-  static async getTeacherWithClasses() {
+  static async getTeachersWithClasses() {
     try {
       const teachers = await TeacherModel.withClasses();
-      return teachers;
-    }
-    catch (error) {
-        console.error({ error: error.message });
+      return { teachers };
+    } catch (error) {
+      console.error(
+        "Service Error in getTeachersWithClasses:",
+        error.message,
+      );
+      throw error;
     }
   }
-
-  // Functions
 
   static async getTeacherSalary(teacherId, fromDate, toDate) {
     try {
-        const salary = await TeacherModel.recieveSalary(teacherId, fromDate, toDate);
-        return salary;
-        }
-    catch (error) {
-        console.error({ error: error.message });
-    }
-
-  }
-
-  // Procedures
-  static async addTeacher(name, surname, patronym, phone) {
-    try {
-        const newTeacher = await TeacherModel.create(name, surname, patronym, phone);
-        return newTeacher;
-    }
-    catch (error) {
-        console.error({ error: error.message });
-    }
-
-  }
-  static async updateTeacher(id, name, surname, patronym, phone) {
-    try {
-        const updatedTeacher = await TeacherModel.update(id, name, surname, patronym, phone);
-        return updatedTeacher;
-    }
-    catch (error) {
-        console.error({ error: error.message });
+      const salary = await TeacherModel.recieveSalary(teacherId, fromDate, toDate);
+      return { salary };
+    } catch (error) {
+      console.error("Service Error in getTeacherSalary:", error.message);
+      throw error;
     }
   }
-  static async deleteTeacher(id) {
+
+  static async createTeacher(name, surname, patronym, phone) {
     try {
-      await TeacherModel.delete(id);
-      return "Object deleted successfully";
+      const teacherId = await TeacherModel.create(name, surname, patronym, phone);
+      return { teacherId, message: "Teacher created successfully" };
+    } catch (error) {
+      console.error("Service Error in createTeacher:", error.message);
+      throw error;
     }
-    catch (error) {
-      console.error({ error: error.message });
+  }
+
+  static async updateTeacher(teacherId, name, surname, patronym, phone) {
+    try {
+      await TeacherModel.update(teacherId, name, surname, patronym, phone);
+      return { message: "Teacher updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateTeacher:", error.message);
+      throw error;
+    }
+  }
+
+  static async deleteTeacher(teacherId) {
+    try {
+      await TeacherModel.delete(teacherId);
+      return { message: `Teacher ${teacherId} deleted successfully` };
+    } catch (error) {
+      console.error("Service Error in deleteTeacher:", error.message);
+      throw error;
     }
   }
 }
+
 export default TeacherService;
+
