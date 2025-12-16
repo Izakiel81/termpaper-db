@@ -1,99 +1,138 @@
 import pool from "../../lib/db.js";
+import StudentModel from "../../lib/models/StudentModel.js";
 class StudentServives {
   static async getStudents() {
-    const students = await pool.query(`SELECT * FROM students`);
-
-    return students.rows;
+    try {
+      const students = await StudentModel.findAll();
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
 
   static async getStudentById(id) {
-    const students = await pool.query(
-      `SELECT * FROM students WHERE student_id=$1`,
-      [id],
-    );
-
-    return students.rows;
+    try {
+      const student = await StudentModel.findById(id);
+      return { student };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
 
   // Views
 
   static async getStudentsAVGAbove7() {
-    const students = await pool.query(`SELECT * FROM vw_students_avg_above_7`);
-
-    return students.rows;
+    try {
+      const student = await StudentModel.AVGAbove7();
+      return { student };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentsByClass() {
-    const students = await pool.query(`SELECT * FROM vw_students_by_class`);
-
-    return students.rows;
+    try {
+      const students = await StudentModel.getByClass();
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentRanking() {
-    const students = await pool.query(`SELECT * FROM vw_student_ranking`);
-
-    return students.rows;
+    try {
+      const students = await StudentModel.recieveRanking();
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
 
   // Functions
 
   static async getStudentsByParent(parentId) {
-    const students = await pool.query(
-      `SELECT * FROM get_children_by_parent($1::integer)`,
-      [parentId],
-    );
-
-    return students.rows;
+    try {
+      const students = await StudentModel.findByParentId(parentId);
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentGradeAndAbsences(studentId, startDate, endDate) {
-    const students = await pool.query(
-      `SELECT * FROM get_student_grades_and_absences($1::integer, $2::date, $3::date)`,
-      [studentId, startDate, endDate],
-    );
-
-    return students.rows;
+    try {
+      const students = await StudentModel.recieveGradesAndAbsences(
+        studentId,
+        startDate,
+        endDate,
+      );
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentMarks(studentId, fromDate, toDate) {
-    const students = await pool.query(
-      `SELECT * FROM get_student_marks($1::integer, $2::date, $3::date)`,
-      [studentId, fromDate, toDate],
-    );
-
-    return students.rows;
+    try {
+      const students = await StudentModel.recieveMarks(
+        studentId,
+        fromDate,
+        toDate,
+      );
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentAttendanceReport(studentId, fromDate, toDate) {
-    const students = await pool.query(
-      `SELECT * FROM student_attendance_report($1::integer, $2::date, $3::date)`,
-      [studentId, fromDate, toDate],
-    );
-
-    return students.rows;
+    try {
+      const report = await StudentModel.recieveAttendanceReport(
+        studentId,
+        fromDate,
+        toDate,
+      );
+      return { report };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async getStudentDayPlan(studentId, fromDate, toDate) {
-    const students = await pool.query(
-      `SELECT * FROM student_day_plan($1::integer, $2::date, $3::date)`,
-      [studentId, fromDate, toDate],
-    );
-
-    return students.rows;
+    try {
+      const day_plan = await StudentModel.recieveDayPlan(
+        studentId,
+        fromDate,
+        toDate,
+      );
+      return { day_plan };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
 
   // Procedures
 
   static async addStudent(name, surname, patronym, phone, class_c) {
-    const newStudent = await pool.query(
-      `CALL proc_create_student($1::character varying, $2::character varying, $3::character varying, $4::character varying, NULL, $5::character varying)`,
-      [name, surname, patronym, phone, class_c],
-    );
+    try {
+      const newStudent = await StudentModel.create(
+        name,
+        surname,
+        patronym,
+        phone,
+        class_c,
+      );
 
-    return newStudent.rows[0].new_student_id;
+      return { newStudent };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async updateStudent(id, name, surname, patronym, phone, class_c) {
-    await pool.query(
-      `CALL proc_update_student($1::integer, $2::character varying, $3::character varying, $4::character varying, $5::character varying, NULL, $6::character varying)`,
-      [id, name, surname, patronym, phone, class_c],
-    );
+    try {
+      await StudentModel.update(id, name, surname, patronym, phone, class_c);
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
   static async deleteStudent(id) {
-    await pool.query(`CALL proc_delete_student($1::integer)`, [id]);
+    try {
+      await S;
+    } catch (error) {}
   }
 }
 export default StudentServives;
