@@ -1,57 +1,79 @@
 import pool from "../../lib/db.js";
+import TeacherModel from "../../lib/models/TeacherModel.js";
 class TeacherService {
   static async getTeacher() {
-    const teacher = await pool.query(`SELECT * FROM teacher`);
-
-    return teacher.rows;
+    try {
+      const teachers = await TeacherModel.findAll();
+      return teachers;
+    }
+    catch (error) {
+        console.error({ error: error.message });
+    }
   }
 
   static async getTeacherById(id) {
-    const teacher = await pool.query(
-      `SELECT * FROM teacher WHERE teacher_id=$1`,
-      [id],
-    );
-
-    return teacher.rows;
+    try {
+      const teacher = await TeacherModel.findById(id);
+      return teacher;
+    }
+    catch (error) {
+        console.error({ error: error.message });
+    }
   }
 
   // Views
 
   static async getTeacherWithClasses() {
-    const teacher = await pool.query(`SELECT * from vw_teachers_with_classes`);
-
-    return teacher.rows;
+    try {
+      const teachers = await TeacherModel.withClasses();
+      return teachers;
+    }
+    catch (error) {
+        console.error({ error: error.message });
+    }
   }
 
   // Functions
 
   static async getTeacherSalary(teacherId, fromDate, toDate) {
-    const teacher = await pool.query(
-      `SELECT * FROM get_teacher_salary($1::integer, $2::date, $3::date)`,
-      [teacherId, fromDate, toDate],
-    );
+    try {
+        const salary = await TeacherModel.recieveSalary(teacherId, fromDate, toDate);
+        return salary;
+        }
+    catch (error) {
+        console.error({ error: error.message });
+    }
 
-    return teacher.rows;
   }
 
   // Procedures
-
   static async addTeacher(name, surname, patronym, phone) {
-    const newTeacher = await pool.query(
-      `CALL proc_create_teacher($1::character varying, $2::character varying, $3::character varying, $4::character varying, NULL, $5::character varying)`,
-      [name, surname, patronym, phone],
-    );
+    try {
+        const newTeacher = await TeacherModel.create(name, surname, patronym, phone);
+        return newTeacher;
+    }
+    catch (error) {
+        console.error({ error: error.message });
+    }
 
-    return newTeacher.rows[0].new_teacher_id;
   }
   static async updateTeacher(id, name, surname, patronym, phone) {
-    await pool.query(
-      `CALL proc_update_teacher($1::integer, $2::character varying, $3::character varying, $4::character varying, $5::character varying, NULL, $6::character varying)`,
-      [id, name, surname, patronym, phone],
-    );
+    try {
+        const updatedTeacher = await TeacherModel.update(id, name, surname, patronym, phone);
+        return updatedTeacher;
+    }
+    catch (error) {
+        console.error({ error: error.message });
+    }
   }
   static async deleteTeacher(id) {
-    await pool.query(`CALL proc_delete_teacher($1::integer)`, [id]);
+    try {
+      await TeacherModel.delete(id);
+      return "Object deleted successfully";
+    }
+    catch (error) {
+      console.error({ error: error.message });
+    }
   }
 }
 export default TeacherService;
