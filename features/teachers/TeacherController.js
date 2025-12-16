@@ -1,4 +1,4 @@
-import teacherService from "./TeacherController.js";
+import teacherService from "./TeacherService.js";
 class TeacherController {
   async getTeacher(req, res, next) {
     try {
