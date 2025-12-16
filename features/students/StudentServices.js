@@ -6,15 +6,24 @@ class StudentServives {
     return students.rows;
   }
 
+  async getStudentById(id) {
+    const students = await pool.query(
+      `SELECT * FROM students WHERE student_id=$1`,
+      [id],
+    );
+
+    return students.rows;
+  }
+
   // Views
 
   async getStudentsAVGAbove7() {
-    const students = await pool.query(`SELECT * FROM students_avg_above_7`);
+    const students = await pool.query(`SELECT * FROM vw_students_avg_above_7`);
 
     return students.rows;
   }
   async getStudentsByClass() {
-    const students = await pool.query(`SELECT * FROM students_by_class`);
+    const students = await pool.query(`SELECT * FROM vw_students_by_class`);
 
     return students.rows;
   }

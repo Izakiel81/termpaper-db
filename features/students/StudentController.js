@@ -9,6 +9,17 @@ class StudentController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  async getStudentById(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const student = await studentService.getStudentById(id);
+      res.status(200).json({ student });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
   async getStudentsAVGAbove7(req, res, next) {
     try {
       const students = await studentService.getStudentsAVGAbove7();

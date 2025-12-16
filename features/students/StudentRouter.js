@@ -4,6 +4,7 @@ import studentController from "./StudentController.js";
 const router = Router();
 
 router.get("/", studentController.getStudents);
+router.get("/:id", studentController.getStudentById);
 router.get("/avg-above-7", studentController.getStudentsAVGAbove7);
 router.get("/class", studentController.getStudentsByClass);
 router.get("/ranking", studentController.getStudentRanking);
