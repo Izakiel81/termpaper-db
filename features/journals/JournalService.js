@@ -1,59 +1,60 @@
 import JournalModel from "../../lib/models/JournalModel.js";
-export default JournalService;
 
-}
-  }
-    }
-      throw error;
-      console.error("Service Error in deleteJournal:", error.message);
-    } catch (error) {
-      return result;
-      const result = await JournalModel.delete(journalId);
-    try {
-  static async deleteJournal(journalId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in updateJournal:", error.message);
-    } catch (error) {
-      return { journal, message: "Journal updated successfully" };
-      const journal = await JournalModel.update(journalId, teacherId, name);
-    try {
-  static async updateJournal(journalId, teacherId, name) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in createJournal:", error.message);
-    } catch (error) {
-      return { journal, message: "Journal created successfully" };
-      const journal = await JournalModel.create(teacherId, name);
-    try {
-  static async createJournal(teacherId, name) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getJournalById:", error.message);
-    } catch (error) {
-      return { journal };
-      }
-        throw new Error(`Journal with ID ${journalId} not found`);
-      if (!journal) {
-      const journal = await JournalModel.findById(journalId);
-    try {
-  static async getJournalById(journalId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getAllJournals:", error.message);
-    } catch (error) {
-      return { journals };
-      const journals = await JournalModel.findAll();
-    try {
-  static async getAllJournals() {
 class JournalService {
+  static async getAllJournals() {
+    try {
+      const journals = await JournalModel.findAll();
+      return { journals };
+    } catch (error) {
+      console.error("Service Error in getAllJournals:", error.message);
+      throw error;
+    }
+  }
+
+  static async getJournalById(journalId) {
+    try {
+      const journal = await JournalModel.findById(journalId);
+      if (!journal) {
+        throw new Error(`Journal with ID ${journalId} not found`);
+      }
+      return { journal };
+    } catch (error) {
+      console.error("Service Error in getJournalById:", error.message);
+      throw error;
+    }
+  }
+
+  static async createJournal(teacherId, name) {
+    try {
+      const journal = await JournalModel.create(teacherId, name);
+      return { journal, message: "Journal created successfully" };
+    } catch (error) {
+      console.error("Service Error in createJournal:", error.message);
+      throw error;
+    }
+  }
+
+  static async updateJournal(journalId, teacherId, name) {
+    try {
+      const journal = await JournalModel.update(journalId, teacherId, name);
+      return { journal, message: "Journal updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateJournal:", error.message);
+      throw error;
+    }
+  }
+
+  static async deleteJournal(journalId) {
+    try {
+      const result = await JournalModel.delete(journalId);
+      return result;
+    } catch (error) {
+      console.error("Service Error in deleteJournal:", error.message);
+      throw error;
+    }
+  }
+}
+
+export default JournalService;
 
 

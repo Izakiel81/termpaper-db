@@ -1,59 +1,60 @@
 import ParentModel from "../../lib/models/ParentModel.js";
-export default ParentService;
 
-}
-  }
-    }
-      throw error;
-      console.error("Service Error in deleteParent:", error.message);
-    } catch (error) {
-      return { message: `Parent ${parentId} deleted successfully` };
-      await ParentModel.delete(parentId);
-    try {
-  static async deleteParent(parentId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in updateParent:", error.message);
-    } catch (error) {
-      return { message: "Parent updated successfully" };
-      await ParentModel.update(parentId, name, surname, patronym, phone);
-    try {
-  static async updateParent(parentId, name, surname, patronym, phone) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in createParent:", error.message);
-    } catch (error) {
-      return { parentId, message: "Parent created successfully" };
-      const parentId = await ParentModel.create(name, surname, patronym, phone);
-    try {
-  static async createParent(name, surname, patronym, phone) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getParentById:", error.message);
-    } catch (error) {
-      return { parent };
-      }
-        throw new Error(`Parent with ID ${parentId} not found`);
-      if (!parent) {
-      const parent = await ParentModel.findById(parentId);
-    try {
-  static async getParentById(parentId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getAllParents:", error.message);
-    } catch (error) {
-      return { parents };
-      const parents = await ParentModel.findAll();
-    try {
-  static async getAllParents() {
 class ParentService {
+  static async getAllParents() {
+    try {
+      const parents = await ParentModel.findAll();
+      return { parents };
+    } catch (error) {
+      console.error("Service Error in getAllParents:", error.message);
+      throw error;
+    }
+  }
+
+  static async getParentById(parentId) {
+    try {
+      const parent = await ParentModel.findById(parentId);
+      if (!parent) {
+        throw new Error(`Parent with ID ${parentId} not found`);
+      }
+      return { parent };
+    } catch (error) {
+      console.error("Service Error in getParentById:", error.message);
+      throw error;
+    }
+  }
+
+  static async createParent(name, surname, patronym, phone) {
+    try {
+      const parentId = await ParentModel.create(name, surname, patronym, phone);
+      return { parentId, message: "Parent created successfully" };
+    } catch (error) {
+      console.error("Service Error in createParent:", error.message);
+      throw error;
+    }
+  }
+
+  static async updateParent(parentId, name, surname, patronym, phone) {
+    try {
+      await ParentModel.update(parentId, name, surname, patronym, phone);
+      return { message: "Parent updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateParent:", error.message);
+      throw error;
+    }
+  }
+
+  static async deleteParent(parentId) {
+    try {
+      await ParentModel.delete(parentId);
+      return { message: `Parent ${parentId} deleted successfully` };
+    } catch (error) {
+      console.error("Service Error in deleteParent:", error.message);
+      throw error;
+    }
+  }
+}
+
+export default ParentService;
 
 

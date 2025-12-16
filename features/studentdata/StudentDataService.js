@@ -1,89 +1,90 @@
 import StudentDataModule from "../../lib/models/StudentDataModel.js";
-export default StudentDataService;
 
-}
-  }
-    }
-      throw error;
-      console.error("Service Error in deleteStudentData:", error.message);
-    } catch (error) {
-      return { message: `Student data ${studentDataId} deleted successfully` };
-      await StudentDataModule.delete(studentDataId);
-    try {
-  static async deleteStudentData(studentDataId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in updateStudentData:", error.message);
-    } catch (error) {
-      return { message: "Student data updated successfully" };
-      );
-        note,
-        status,
-        mark,
-        lesson,
-        studentId,
-        journalId,
-        studentDataId,
-      await StudentDataModule.update(
-    try {
-  ) {
-    note,
-    status,
-    mark,
-    lesson,
-    studentId,
-    journalId,
-    studentDataId,
-  static async updateStudentData(
-
-  }
-    }
-      throw error;
-      console.error("Service Error in createStudentData:", error.message);
-    } catch (error) {
-      return { studentDataId, message: "Student data created successfully" };
-      );
-        note,
-        status,
-        mark,
-        lesson,
-        studentId,
-        journalId,
-      const studentDataId = await StudentDataModule.create(
-    try {
-  ) {
-    note,
-    status,
-    mark,
-    lesson,
-    studentId,
-    journalId,
-  static async createStudentData(
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getStudentDataById:", error.message);
-    } catch (error) {
-      return { studentData };
-      }
-        throw new Error(`Student Data with ID ${studentDataId} not found`);
-      if (!studentData) {
-      const studentData = await StudentDataModule.findById(studentDataId);
-    try {
-  static async getStudentDataById(studentDataId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getAllStudentData:", error.message);
-    } catch (error) {
-      return { studentData };
-      const studentData = await StudentDataModule.findAll();
-    try {
-  static async getAllStudentData() {
 class StudentDataService {
+  static async getAllStudentData() {
+    try {
+      const studentData = await StudentDataModule.findAll();
+      return { studentData };
+    } catch (error) {
+      console.error("Service Error in getAllStudentData:", error.message);
+      throw error;
+    }
+  }
+
+  static async getStudentDataById(studentDataId) {
+    try {
+      const studentData = await StudentDataModule.findById(studentDataId);
+      if (!studentData) {
+        throw new Error(`Student Data with ID ${studentDataId} not found`);
+      }
+      return { studentData };
+    } catch (error) {
+      console.error("Service Error in getStudentDataById:", error.message);
+      throw error;
+    }
+  }
+
+  static async createStudentData(
+    journalId,
+    studentId,
+    lesson,
+    mark,
+    status,
+    note,
+  ) {
+    try {
+      const studentDataId = await StudentDataModule.create(
+        journalId,
+        studentId,
+        lesson,
+        mark,
+        status,
+        note,
+      );
+      return { studentDataId, message: "Student data created successfully" };
+    } catch (error) {
+      console.error("Service Error in createStudentData:", error.message);
+      throw error;
+    }
+  }
+
+  static async updateStudentData(
+    studentDataId,
+    journalId,
+    studentId,
+    lesson,
+    mark,
+    status,
+    note,
+  ) {
+    try {
+      await StudentDataModule.update(
+        studentDataId,
+        journalId,
+        studentId,
+        lesson,
+        mark,
+        status,
+        note,
+      );
+      return { message: "Student data updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateStudentData:", error.message);
+      throw error;
+    }
+  }
+
+  static async deleteStudentData(studentDataId) {
+    try {
+      await StudentDataModule.delete(studentDataId);
+      return { message: `Student data ${studentDataId} deleted successfully` };
+    } catch (error) {
+      console.error("Service Error in deleteStudentData:", error.message);
+      throw error;
+    }
+  }
+}
+
+export default StudentDataService;
 
 

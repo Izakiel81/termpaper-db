@@ -1,89 +1,90 @@
 import LessonModule from "../../lib/models/LessonModel.js";
-export default LessonService;
 
-}
-  }
-    }
-      throw error;
-      console.error("Service Error in deleteLesson:", error.message);
-    } catch (error) {
-      return { message: `Lesson ${lessonId} deleted successfully` };
-      await LessonModule.delete(lessonId);
-    try {
-  static async deleteLesson(lessonId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in updateLesson:", error.message);
-    } catch (error) {
-      return { message: "Lesson updated successfully" };
-      );
-        date,
-        teacherId,
-        materialId,
-        subjectId,
-        className,
-        name,
-        lessonId,
-      await LessonModule.update(
-    try {
-  ) {
-    date,
-    teacherId,
-    materialId,
-    subjectId,
-    className,
-    name,
-    lessonId,
-  static async updateLesson(
-
-  }
-    }
-      throw error;
-      console.error("Service Error in createLesson:", error.message);
-    } catch (error) {
-      return { lessonId, message: "Lesson created successfully" };
-      );
-        date,
-        teacherId,
-        materialId,
-        subjectId,
-        className,
-        name,
-      const lessonId = await LessonModule.create(
-    try {
-  ) {
-    date,
-    teacherId,
-    materialId,
-    subjectId,
-    className,
-    name,
-  static async createLesson(
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getLessonById:", error.message);
-    } catch (error) {
-      return { lesson };
-      }
-        throw new Error(`Lesson with ID ${lessonId} not found`);
-      if (!lesson) {
-      const lesson = await LessonModule.findById(lessonId);
-    try {
-  static async getLessonById(lessonId) {
-
-  }
-    }
-      throw error;
-      console.error("Service Error in getAllLessons:", error.message);
-    } catch (error) {
-      return { lessons };
-      const lessons = await LessonModule.findAll();
-    try {
-  static async getAllLessons() {
 class LessonService {
+  static async getAllLessons() {
+    try {
+      const lessons = await LessonModule.findAll();
+      return { lessons };
+    } catch (error) {
+      console.error("Service Error in getAllLessons:", error.message);
+      throw error;
+    }
+  }
+
+  static async getLessonById(lessonId) {
+    try {
+      const lesson = await LessonModule.findById(lessonId);
+      if (!lesson) {
+        throw new Error(`Lesson with ID ${lessonId} not found`);
+      }
+      return { lesson };
+    } catch (error) {
+      console.error("Service Error in getLessonById:", error.message);
+      throw error;
+    }
+  }
+
+  static async createLesson(
+    name,
+    className,
+    subjectId,
+    materialId,
+    teacherId,
+    date,
+  ) {
+    try {
+      const lessonId = await LessonModule.create(
+        name,
+        className,
+        subjectId,
+        materialId,
+        teacherId,
+        date,
+      );
+      return { lessonId, message: "Lesson created successfully" };
+    } catch (error) {
+      console.error("Service Error in createLesson:", error.message);
+      throw error;
+    }
+  }
+
+  static async updateLesson(
+    lessonId,
+    name,
+    className,
+    subjectId,
+    materialId,
+    teacherId,
+    date,
+  ) {
+    try {
+      await LessonModule.update(
+        lessonId,
+        name,
+        className,
+        subjectId,
+        materialId,
+        teacherId,
+        date,
+      );
+      return { message: "Lesson updated successfully" };
+    } catch (error) {
+      console.error("Service Error in updateLesson:", error.message);
+      throw error;
+    }
+  }
+
+  static async deleteLesson(lessonId) {
+    try {
+      await LessonModule.delete(lessonId);
+      return { message: `Lesson ${lessonId} deleted successfully` };
+    } catch (error) {
+      console.error("Service Error in deleteLesson:", error.message);
+      throw error;
+    }
+  }
+}
+
+export default LessonService;
 
 
