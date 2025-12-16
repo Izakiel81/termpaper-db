@@ -1,6 +1,6 @@
 import studentService from "./StudentServices.js";
 class StudentController {
-  async getStudents(req, res, next) {
+  static async getStudents(req, res, next) {
     try {
       const students = await studentService.getStudents();
 
@@ -10,7 +10,7 @@ class StudentController {
     }
   }
 
-  async getStudentById(req, res, next) {
+  static async getStudentById(req, res, next) {
     try {
       const { id } = req.params;
 
@@ -20,7 +20,7 @@ class StudentController {
       res.status(400).json({ error: error.message });
     }
   }
-  async getStudentsAVGAbove7(req, res, next) {
+  static async getStudentsAVGAbove7(req, res, next) {
     try {
       const students = await studentService.getStudentsAVGAbove7();
 
@@ -30,7 +30,7 @@ class StudentController {
     }
   }
 
-  async getStudentsByClass(req, res, next) {
+  static async getStudentsByClass(req, res, next) {
     try {
       const students = await studentService.getStudentsByClass();
       res.status(200).json({ students });
@@ -39,7 +39,7 @@ class StudentController {
     }
   }
 
-  async getStudentRanking(req, res, next) {
+  static async getStudentRanking(req, res, next) {
     try {
       const students = await studentService.getStudentRanking();
 
@@ -49,7 +49,7 @@ class StudentController {
     }
   }
 
-  async getStudentsByParent(req, res, next) {
+  static async getStudentsByParent(req, res, next) {
     try {
       const { parentId } = req.params;
       const students = await studentService.getStudentsByParent(parentId);
@@ -60,7 +60,7 @@ class StudentController {
     }
   }
 
-  async getStudentGradeAndAbsences(req, res, next) {
+  static async getStudentGradeAndAbsences(req, res, next) {
     try {
       const { studentId, startDate, endDate } = req.query;
 
@@ -75,7 +75,7 @@ class StudentController {
     }
   }
 
-  async getStudentMarks(req, res, next) {
+  static async getStudentMarks(req, res, next) {
     try {
       const { studentId, fromDate, toDate } = req.query;
       const students = await studentService.getStudentMarks(
@@ -89,7 +89,7 @@ class StudentController {
     }
   }
 
-  async getStudentAttendanceReport(req, res, next) {
+  static async getStudentAttendanceReport(req, res, next) {
     try {
       const { studentId, fromDate, toDate } = req.query;
       const students = await studentService.getStudentAttendanceReport(
@@ -103,7 +103,7 @@ class StudentController {
     }
   }
 
-  async getStudentDayPlan(req, res, next) {
+  static async getStudentDayPlan(req, res, next) {
     try {
       const { studentId, fromDate, toDate } = req.query;
       const students = await studentService.getStudentDayPlan(
@@ -117,7 +117,7 @@ class StudentController {
     }
   }
 
-  async addStudent(req, res, next) {
+  static async addStudent(req, res, next) {
     try {
       const { name, surname, patronym, phone, class_c } = req.body;
       const newStudent = await studentService.addStudent(
@@ -132,7 +132,7 @@ class StudentController {
       res.status(400).json({ error: error.message });
     }
   }
-  async updateStudent(req, res, next) {
+  static async updateStudent(req, res, next) {
     try {
       const { id, name, surname, patronym, phone, class_c } = req.body;
       await studentService.updateStudent(
@@ -150,7 +150,7 @@ class StudentController {
       res.status(400).json({ error: error.message });
     }
   }
-  async deleteStudent(req, res, next) {
+  static async deleteStudent(req, res, next) {
     try {
       const { id } = req.params;
       await studentService.deleteStudent(id);
@@ -162,4 +162,4 @@ class StudentController {
     }
   }
 }
-export default new StudentController();
+export default StudentController;
