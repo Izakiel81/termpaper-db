@@ -6,7 +6,7 @@ const ACCESS_TOKEN_EXPIRES = "1h";
 const REFRESH_TOKEN_EXPIRES = "7d";
 
 class AuthService {
-  async login(username, email, password) {
+  static async login(username, email, password) {
     const result = await pool.query(
       "SELECT username, password FROM users WHERE username = $1 OR email = $2",
       [username, email],
@@ -41,7 +41,7 @@ class AuthService {
     return { accessToken, refreshToken, roles };
   }
 
-  refreshToken(oldToken) {
+  static refreshToken(oldToken) {
     try {
       const payload = jwt.verify(oldToken, process.env.REFRESH_SECRET);
 
@@ -57,4 +57,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default AuthService;

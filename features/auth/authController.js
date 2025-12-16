@@ -1,6 +1,6 @@
 import authService from "./authService.js";
 class AuthController {
-  async login(req, res, next) {
+  static async login(req, res, next) {
     try {
       const { username, email, password } = req.body;
       const tokens = await authService.login(username, email, password);
@@ -10,7 +10,7 @@ class AuthController {
     }
   }
 
-  async refresh(req, res, next) {
+  static async refresh(req, res, next) {
     try {
       const { refreshToken: oldToken } = req.body;
       const newAccessToken = authService.refreshToken(oldToken);
@@ -21,4 +21,4 @@ class AuthController {
   }
 }
 
-export default new AuthController();
+export default AuthController;
