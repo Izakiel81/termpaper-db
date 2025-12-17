@@ -134,7 +134,16 @@ class StudentController {
   }
   static async updateStudent(req, res, next) {
     try {
-      const { id, name, surname, patronym, phone, class_c } = req.body;
+      const { name, surname, patronym, phone, class_c } = req.body;
+      const id = req.params.id || req.body.id;
+
+      if (!id || !name || !surname || !patronym || !phone) {
+        return res.status(400).json({
+          error:
+            "id, name, surname, patronym, and phone are required",
+        });
+      }
+
       await studentService.updateStudent(
         id,
         name,

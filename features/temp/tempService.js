@@ -55,6 +55,51 @@ class TempService {
     return result.rows;
   }
 
+  async createTestUser() {
+  // 1. Setup specific test data
+  const rawData = {
+    name: "sniffy2",
+    surname: "",
+    patronym: ""
+  };
+
+  // 2. Translate to Latin using your existing utility
+  const latName = tempUtils.tranlateToLatin(rawData.name);
+  const latSurname = tempUtils.tranlateToLatin(rawData.surname);
+  const latPatronym = tempUtils.tranlateToLatin(rawData.patronym);
+
+  
+  const rawPassword = 'Test1234!';
+  console.log(`--- TEST USER CREATED ---`);
+  console.log(`Login/Email: ${latSurname}${latName}${latPatronym}@school.ua`);
+  console.log(`Password: ${rawPassword}`);
+  console.log(`-------------------------`);
+
+  const hashedPassword = await tempUtils.hashPassword(rawPassword);
+
+  try {
+    const userResult = await pool.query(
+      `CALL proc_create_user($1::character varying, $2::character varying, $3::character varying, null)`,
+      [
+        latSurname + latName + latPatronym,
+        latSurname + latName + latPatronym + "@school.ua",
+        hashedPassword,
+      ]
+    );
+
+    const newUserId = userResult.rows[0].new_user_id;
+
+    await pool.query(
+      `CALL proc_assign_user_to_entity($1::integer, 'teacher'::text, $2::integer)`,
+      [newUserId, 1] 
+    );
+
+    return { success: true, email: `${latSurname}${latName}${latPatronym}@school.ua`, password: rawPassword };
+  } catch (err) {
+    console.error("Error creating test user:", err);
+  }
+}
+
   async assignRoles(startFrom = 0, roleId) {
     const users = await pool.query(`SELECT * FROM users`);
 

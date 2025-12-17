@@ -3,11 +3,25 @@ import teacherController from "./TeacherController.js";
 
 const router = Router();
 
-router.get("/", teacherController.getTeacher);
+// Get all teachers
+router.get("/", teacherController.getAllTeachers);
+
+// Get teacher by ID
 router.get("/:id", teacherController.getTeacherById);
+
+// Get teachers with their classes
+router.get("/with-classes", teacherController.getTeachersWithClasses);
+
+// Teacher salary report
 router.get("/salary", teacherController.getTeacherSalary);
-router.post("/", teacherController.addTeacher);
-router.patch("/", teacherController.updateTeacher);
+
+// Create a new teacher
+router.post("/", teacherController.createTeacher);
+
+// Update a teacher (by ID)
+router.patch("/:id", teacherController.updateTeacher);
+
+// Delete a teacher
 router.delete("/:id", teacherController.deleteTeacher);
 
 export default router;
