@@ -83,6 +83,16 @@ class StudentDataService {
       throw error;
     }
   }
+
+  static async getStudentDataMarks7d(studentId) {
+    try {
+      const marks = await StudentDataModule.findMarks7d(studentId);
+      return { marks };
+    } catch (error) {
+      console.error("Service Error in getStudentDataMarks7d:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default StudentDataService;

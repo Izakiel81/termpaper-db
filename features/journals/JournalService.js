@@ -53,6 +53,16 @@ class JournalService {
       throw error;
     }
   }
+
+  static async getJournalByStudent(studentId) {
+    try {
+      const entries = await JournalModel.findByStudentId(studentId);
+      return { entries };
+    } catch (error) {
+      console.error("Service Error in getJournalByStudent:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default JournalService;

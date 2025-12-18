@@ -98,6 +98,19 @@ class StudentDataController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  static async getStudentDataMarks7d(req, res, next) {
+    try {
+      const { studentId } = req.params;
+      if (!studentId) {
+        return res.status(400).json({ error: "Student ID is required" });
+      }
+      const result = await StudentDataService.getStudentDataMarks7d(studentId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default StudentDataController;

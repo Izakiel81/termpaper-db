@@ -74,6 +74,18 @@ class JournalController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  static async getJournalByStudent(req, res, next) {
+    try {
+      const { studentId } = req.params;
+      if (!studentId)
+        return res.status(400).json({ error: "studentId is required" });
+      const { entries } = await JournalService.getJournalByStudent(studentId);
+      res.status(200).json({ entries });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default JournalController;
