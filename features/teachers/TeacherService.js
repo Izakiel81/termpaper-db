@@ -29,17 +29,18 @@ class TeacherService {
       const teachers = await TeacherModel.withClasses();
       return { teachers };
     } catch (error) {
-      console.error(
-        "Service Error in getTeachersWithClasses:",
-        error.message,
-      );
+      console.error("Service Error in getTeachersWithClasses:", error.message);
       throw error;
     }
   }
 
   static async getTeacherSalary(teacherId, fromDate, toDate) {
     try {
-      const salary = await TeacherModel.recieveSalary(teacherId, fromDate, toDate);
+      const salary = await TeacherModel.recieveSalary(
+        teacherId,
+        fromDate,
+        toDate,
+      );
       return { salary };
     } catch (error) {
       console.error("Service Error in getTeacherSalary:", error.message);
@@ -47,9 +48,15 @@ class TeacherService {
     }
   }
 
-  static async createTeacher(name, surname, patronym, phone) {
+  static async createTeacher(name, surname, patronym, phone, user_id) {
     try {
-      const teacherId = await TeacherModel.create(name, surname, patronym, phone);
+      const teacherId = await TeacherModel.create(
+        name,
+        surname,
+        patronym,
+        phone,
+        user_id,
+      );
       return { teacherId, message: "Teacher created successfully" };
     } catch (error) {
       console.error("Service Error in createTeacher:", error.message);
@@ -57,9 +64,23 @@ class TeacherService {
     }
   }
 
-  static async updateTeacher(teacherId, name, surname, patronym, phone) {
+  static async updateTeacher(
+    teacherId,
+    name,
+    surname,
+    patronym,
+    phone,
+    user_id,
+  ) {
     try {
-      await TeacherModel.update(teacherId, name, surname, patronym, phone);
+      await TeacherModel.update(
+        teacherId,
+        name,
+        surname,
+        patronym,
+        phone,
+        user_id,
+      );
       return { message: "Teacher updated successfully" };
     } catch (error) {
       console.error("Service Error in updateTeacher:", error.message);
@@ -79,4 +100,3 @@ class TeacherService {
 }
 
 export default TeacherService;
-

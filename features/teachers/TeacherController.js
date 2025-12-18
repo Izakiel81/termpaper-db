@@ -1,3 +1,4 @@
+import { use } from "react";
 import TeacherService from "./TeacherService.js";
 
 class TeacherController {
@@ -57,7 +58,7 @@ class TeacherController {
 
   static async createTeacher(req, res, next) {
     try {
-      const { name, surname, patronym, phone } = req.body;
+      const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
         return res.status(400).json({
@@ -70,6 +71,7 @@ class TeacherController {
         surname,
         patronym,
         phone,
+        user_id,
       );
       res.status(201).json(result);
     } catch (error) {
@@ -80,7 +82,7 @@ class TeacherController {
   static async updateTeacher(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, surname, patronym, phone } = req.body;
+      const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
         return res.status(400).json({
@@ -94,6 +96,7 @@ class TeacherController {
         surname,
         patronym,
         phone,
+        user_id,
       );
       res.status(200).json(result);
     } catch (error) {
@@ -118,4 +121,3 @@ class TeacherController {
 }
 
 export default TeacherController;
-
