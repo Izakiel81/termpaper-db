@@ -2,7 +2,12 @@ import authService from "./authService.js";
 class AuthController {
   static async login(req, res, next) {
     try {
-      const { username, email, password } = req.body;
+      // Guard: req.body may be undefined if Content-Type header is missing or body is invalid JSON
+      if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: 'Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.' });
+      }
+
+      const { username, email, password } = req.body || {};
       if (!username && !email) return res.status(400).json({ error: 'username or email required' });
       if (!password) return res.status(400).json({ error: 'password required' });
 
@@ -19,7 +24,10 @@ class AuthController {
 
   static async refresh(req, res, next) {
     try {
-      const { refreshToken: oldToken } = req.body;
+      if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: 'Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.' });
+      }
+      const { refreshToken: oldToken } = req.body || {};
       if (!oldToken) {
         console.warn('[auth] refresh called without token from', req.ip);
         return res.status(401).json({ error: 'Missing refresh token' });
@@ -36,7 +44,10 @@ class AuthController {
   static async me(req, res) {
     // authenticateJWT attaches req.user
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-    res.json({ user: req.user });
+    // return only the user id (normalize common claim names)
+    const id = req.user.userId ?? req.user.id ?? req.user.sub ?? null;
+    if (!id) return res.status(400).json({ error: 'User id missing in token' });
+    res.json({ user: { id } });
   }
 }
 

@@ -49,6 +49,20 @@ class UserRoleController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  static async getUserRole(req, res, next) {
+    try {
+      const { userId } = req.params;
+      if (!userId) {
+        return res.status(400).json({ error: "userId is required" });
+      }
+
+      const role = await UserRoleService.getUserRole(userId);
+      res.status(200).json(role);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default UserRoleController;

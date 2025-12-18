@@ -91,6 +91,19 @@ class UserController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  static async getUserData(req, res, next) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ error: "User ID is required" });
+      }
+      const result = await UserService.getUserData(id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default UserController;

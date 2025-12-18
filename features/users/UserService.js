@@ -63,6 +63,16 @@ class UserService {
       throw error;
     }
   }
+
+  static async getUserData(userId) {
+    try {
+      const userData = await UserModel.getUserData(userId);
+      return { userData };
+    } catch (error) {
+      console.error("Service Error in getUserData:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default UserService;

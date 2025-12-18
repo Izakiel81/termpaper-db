@@ -12,5 +12,8 @@ router.post("/assign", UserRoleController.assignRole);
 // Remove a role from a user
 router.delete("/remove", UserRoleController.removeRoleFromUser);
 
+// Get a user's role
+router.get("/role/:userId", UserRoleController.getUserRole);
+
 export default router;
 

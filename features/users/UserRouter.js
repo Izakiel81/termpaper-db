@@ -21,5 +21,8 @@ router.delete("/:id", UserController.deleteUser);
 // Reset password
 router.post("/reset-password", UserController.resetPassword);
 
+// Get user data
+router.get("/:id/data", UserController.getUserData);
+
 export default router;
 

@@ -30,6 +30,16 @@ class UserRoleService {
       throw error;
     }
   }
+
+  static async getUserRole(userId) {
+    try {
+      const role = await UserRoleModel.getUserRole(userId);
+      return { role };
+    } catch (error) {
+      console.error("Service Error in getUserRole:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default UserRoleService;
