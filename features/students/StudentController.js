@@ -68,7 +68,7 @@ class StudentController {
         startDate,
         endDate,
       );
-      res.status(200).json({ students });
+      res.status(200).json({ students: students || [] });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -93,8 +93,6 @@ class StudentController {
       const { studentId, fromDate, toDate } = req.query;
       const { report } = await studentService.getStudentAttendanceReport(
         studentId,
-        fromDate,
-        toDate,
       );
       res.status(200).json({ report });
     } catch (error) {

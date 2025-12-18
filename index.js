@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 import mainRouter from "./features/router.js";
 import authRoutes from "./features/auth/authRoutes.js";
-import authMiddleware from "./features/auth/authMiddleware.js";
-import TempService from "./features/temp/tempService.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -24,9 +24,9 @@ class HomeworkService {
     }
   }
 
-  static async getHomeworkByStudentOrClass() {
+  static async getHomeworkByStudentOrClass(studentId) {
     try {
-      const homework = await HomeworkModule.recieveByStudentOrClass();
+      const homework = await HomeworkModule.recieveByStudentOrClass(studentId);
       return { homework };
     } catch (error) {
       console.error(

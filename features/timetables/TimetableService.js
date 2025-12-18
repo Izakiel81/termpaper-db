@@ -53,6 +53,26 @@ class TimetableService {
       throw error;
     }
   }
+
+  static async getWeeklyTimetable(timetableId) {
+    try {
+      const timetable = await TimetableModel.weekById(timetableId);
+      return { timetable: timetable || [] };
+    } catch (error) {
+      console.error("Service Error in getWeeklyTimetable:", error.message);
+      throw error;
+    }
+  }
+
+  static async getTimetableByStudentId(studentId) {
+    try {
+      const timetable = await TimetableModel.findTimetablebyStudentId(studentId);
+      return { timetable };
+    } catch (error) {
+      console.error("Service Error in getTimetableByStudentId:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default TimetableService;

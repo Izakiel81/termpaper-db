@@ -74,6 +74,34 @@ class TimetableController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  static async getWeeklyTimetable(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({ error: "Timetable ID is required" });
+      }
+      console.log("[controller] getWeeklyTimetable id=", id);
+      const result = await TimetableService.getWeeklyTimetable(id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async getTimetableByStudentId(req, res, next) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ error: "Student ID is required" });
+      }
+      const result = await TimetableService.getTimetableByStudentId(id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default TimetableController;

@@ -84,8 +84,6 @@ class StudentServives {
     try {
       const report = await StudentModel.recieveAttendanceReport(
         studentId,
-        fromDate,
-        toDate,
       );
       return { report };
     } catch (error) {
