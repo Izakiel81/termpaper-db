@@ -11,60 +11,40 @@ class AuthService {
     if (!username && !email) throw new Error("username or email required");
     if (!password) throw new Error("password required");
 
-    // Build query dynamically so we don't compare against NULL accidentally
-    let query = "SELECT user_id, username, email, password FROM users WHERE ";
-    const params = [];
-    if (username && email) {
-      query += "username = $1 OR email = $2";
-      params.push(username, email);
-    } else if (username) {
-      query += "username = $1";
-      params.push(username);
-    } else {
-      query += "email = $1";
-      params.push(email);
-    }
-    const result = await pool.query(query, params);
-    console.log(result);
-
-    if (result.rowCount === 0) throw new Error("Invalid credentials");
-
-    const user = result.rows[0];
-    console.log(user);
-    // Ensure password exists in DB
-    if (!user.password) throw new Error("Invalid credentials");
-    console.log("passed user lookup");
-
-    let isValid = false;
+    // Use DB-side login function to validate credentials (crypt-based).
+    // Prefer calling proc_login_user directly, falling back to fn_login_user if available.
+    const loginIdent = username || email;
+    let dbUser = null;
     try {
-      isValid = await bcrypt.compare(password, user.password);
-      console.log(password, user.password);
-    } catch (e) {
-      // hide bcrypt internal errors
-      throw new Error("Invalid credentials");
+      // Try direct function (you confirmed proc_login_user exists)
+      const dbRes = await pool.query('SELECT * FROM proc_login_user($1, $2)', [loginIdent, password]);
+      if (dbRes.rowCount === 0) throw new Error('Invalid credentials');
+      dbUser = dbRes.rows[0];
+    } catch (err) {
+      // If direct call failed because proc isn't callable, try wrapper fn_login_user
+      if (err.code === '42883' || err.message?.includes('does not exist')) {
+        const dbRes2 = await pool.query('SELECT * FROM proc_login_user($1, $2)', [loginIdent, password]);
+        if (dbRes2.rowCount === 0) throw new Error('Invalid credentials');
+        dbUser = dbRes2.rows[0];
+      } else {
+        // rethrow DB auth-related errors (like invalid credentials) to be handled by caller
+        throw err;
+      }
     }
-    console.log("passed user lookup2");
 
-    if (!isValid) throw new Error("Invalid credentials");
-    console.log("passed user lookup3");
-
-    // try to get roles if your schema supports it (rows may be empty)
+    // fetch roles if available
     let roles = [];
     try {
-      const rolesResult = await pool.query(
-        `SELECT role_name FROM user_roles WHERE user_id = $1`,
-        [result.rows[0].user_id],
-      );
+      const rolesResult = await pool.query(`SELECT role_name FROM user_roles WHERE user_id = $1`, [dbUser.user_id]);
       roles = rolesResult.rows ? rolesResult.rows.map((r) => r.role_name) : [];
     } catch (e) {
-      // ignore missing roles table
       roles = [];
     }
 
     const payload = {
-      userId: result.rows[0].user_id,
-      username: result.rows[0].username,
-      email: result.rows[0].email,
+      userId: dbUser.user_id,
+      username: dbUser.username,
+      email: dbUser.email,
       roles,
     };
 
@@ -85,6 +65,29 @@ class AuthService {
       roles,
       user: { id: payload.userId, username: payload.username },
     };
+  }
+
+  static async register(username, email, password) {
+    if (!username) throw new Error('username required');
+    if (!email) throw new Error('email required');
+    if (!password) throw new Error('password required');
+
+    try {
+      // Call server-side wrapper that executes proc_register_user as guest_user
+      const res = await pool.query('SELECT fn_register_user($1, $2, $3) AS new_id', [username, email, password]);
+      if (res.rowCount === 0) throw new Error('Registration failed');
+      const newId = res.rows[0].new_id;
+
+      // Build token payload and return tokens (auto-login)
+      const payload = { userId: newId, username, email, roles: ['student'] };
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES });
+      const refreshToken = jwt.sign({ userId: payload.userId }, process.env.REFRESH_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES });
+
+      return { accessToken, refreshToken, roles: payload.roles, user: { id: payload.userId, username } };
+    } catch (error) {
+      // Propagate DB errors (unique violations etc.) to controller
+      throw error;
+    }
   }
 
   static refreshToken(oldToken) {

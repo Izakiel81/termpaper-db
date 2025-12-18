@@ -49,6 +49,30 @@ class AuthController {
     if (!id) return res.status(400).json({ error: 'User id missing in token' });
     res.json({ user: { id } });
   }
+
+  static async register(req, res, next) {
+    try {
+      if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: 'Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.' });
+      }
+      const { username, email, password } = req.body || {};
+      if (!username) return res.status(400).json({ error: 'username required' });
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!password) return res.status(400).json({ error: 'password required' });
+
+      const tokens = await authService.register(username, email, password);
+      res.status(201).json(tokens);
+    } catch (error) {
+      // map conflict and validation errors
+      if (error.code === '23505') { // unique_violation
+        return res.status(409).json({ error: error.message });
+      }
+      if (error.message && error.message.toLowerCase().includes('required')) {
+        return res.status(400).json({ error: error.message });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 export default AuthController;

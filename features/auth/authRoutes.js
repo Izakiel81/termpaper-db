@@ -5,6 +5,7 @@ import authenticateJWT from "./authMiddleware.js";
 const router = Router();
 
 router.post("/login", authController.login);
+router.post("/register", authController.register);
 router.post("/refresh", authController.refresh);
 router.get("/me", authenticateJWT, authController.me);
 

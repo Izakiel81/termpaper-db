@@ -1,4 +1,3 @@
-import { use } from "react";
 import TeacherService from "./TeacherService.js";
 
 class TeacherController {
