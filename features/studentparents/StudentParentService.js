@@ -1,9 +1,10 @@
 import StudentParentModel from "../../lib/models/StudentParentModel.js";
+import pool from "../../lib/db.js";
 
 class StudentParentService {
-  static async getParentsByStudentId(studentId) {
+  static async getParentsByStudentId(studentId, db = pool) {
     try {
-      const parents = await StudentParentModel.findByStudentId(studentId);
+      const parents = await StudentParentModel.findByStudentId(studentId, db);
       return { parents };
     } catch (error) {
       console.error(
@@ -14,9 +15,9 @@ class StudentParentService {
     }
   }
 
-  static async assignParentToStudent(studentId, parentId) {
+  static async assignParentToStudent(studentId, parentId, db = pool) {
     try {
-      const result = await StudentParentModel.assign(studentId, parentId);
+      const result = await StudentParentModel.assign(studentId, parentId, db);
       return {
         result,
         message: `Parent ${parentId} assigned to Student ${studentId}`,
@@ -27,9 +28,9 @@ class StudentParentService {
     }
   }
 
-  static async unassignParentFromStudent(studentId, parentId) {
+  static async unassignParentFromStudent(studentId, parentId, db = pool) {
     try {
-      const result = await StudentParentModel.unassign(studentId, parentId);
+      const result = await StudentParentModel.unassign(studentId, parentId, db);
       return result;
     } catch (error) {
       console.error(

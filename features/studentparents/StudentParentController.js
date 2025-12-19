@@ -1,61 +1,55 @@
 import StudentParentService from "./StudentParentService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class StudentParentController {
   static async getParentsByStudentId(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId } = req.params;
 
       if (!studentId) {
-        return res.status(400).json({ error: "studentId is required" });
+        throw new Error("studentId is required");
       }
 
       const result = await StudentParentService.getParentsByStudentId(
         studentId,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async assignParentToStudent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId, parentId } = req.body;
 
       if (!studentId || !parentId) {
-        return res
-          .status(400)
-          .json({ error: "studentId and parentId are required" });
+        throw new Error("studentId and parentId are required");
       }
 
       const result = await StudentParentService.assignParentToStudent(
         studentId,
         parentId,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async unassignParentFromStudent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId, parentId } = req.body;
 
       if (!studentId || !parentId) {
-        return res
-          .status(400)
-          .json({ error: "studentId and parentId are required" });
+        throw new Error("studentId and parentId are required");
       }
 
       const result = await StudentParentService.unassignParentFromStudent(
         studentId,
         parentId,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 }
 

@@ -1,9 +1,10 @@
 import UserRoleModel from "../../lib/models/UserRoleModel.js";
+import pool from "../../lib/db.js";
 
 class UserRoleService {
-  static async getRolesByUserId(userId) {
+  static async getRolesByUserId(userId, db = pool) {
     try {
-      const roles = await UserRoleModel.findRolesByUserId(userId);
+      const roles = await UserRoleModel.findRolesByUserId(userId, db);
       return { roles };
     } catch (error) {
       console.error("Service Error in getRolesByUserId:", error.message);
@@ -11,9 +12,9 @@ class UserRoleService {
     }
   }
 
-  static async assignRole(userId, roleId) {
+  static async assignRole(userId, roleId, db = pool) {
     try {
-      const result = await UserRoleModel.assignRole(userId, roleId);
+      const result = await UserRoleModel.assignRole(userId, roleId, db);
       return { message: `Role ${roleId} assigned to User ${userId}.`, result };
     } catch (error) {
       console.error("Service Error in assignRole:", error.message);
@@ -21,9 +22,9 @@ class UserRoleService {
     }
   }
 
-  static async removeRoleFromUser(userId, roleId) {
+  static async removeRoleFromUser(userId, roleId, db = pool) {
     try {
-      const result = await UserRoleModel.removeRoleFromUser(userId, roleId);
+      const result = await UserRoleModel.removeRoleFromUser(userId, roleId, db);
       return result;
     } catch (error) {
       console.error("Service Error in removeRoleFromUser:", error.message);
@@ -31,9 +32,9 @@ class UserRoleService {
     }
   }
 
-  static async getUserRole(userId) {
+  static async getUserRole(userId, db = pool) {
     try {
-      const role = await UserRoleModel.getUserRole(userId);
+      const role = await UserRoleModel.getUserRole(userId, db);
       return { role };
     } catch (error) {
       console.error("Service Error in getUserRole:", error.message);

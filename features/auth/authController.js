@@ -1,4 +1,5 @@
 import authService from "./authService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 class AuthController {
   static async login(req, res, next) {
     try {
@@ -26,34 +27,31 @@ class AuthController {
   }
 
   static async refresh(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({
-          error:
-            "Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.",
-        });
+        throw new Error(
+          "Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.",
+        );
       }
       const { refreshToken: oldToken } = req.body || {};
       if (!oldToken) {
         console.warn("[auth] refresh called without token from", req.ip);
-        return res.status(401).json({ error: "Missing refresh token" });
+        throw new Error("Missing refresh token");
       }
-      const newAccessToken = await authService.refreshToken(oldToken);
-      res.json({ accessToken: newAccessToken });
-    } catch (error) {
-      console.warn("[auth] refresh failed:", error.message);
-      res.status(401).json({ error: error.message });
-    }
+      const newAccessToken = authService.refreshToken(oldToken);
+      return { accessToken: newAccessToken };
+    });
   }
 
   static async me(req, res) {
-    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
-    const id = req.user.userId ?? req.user.id ?? req.user.sub ?? null;
-    const role = req.user.role ?? null;
-    if (!id) return res.status(400).json({ error: "User id missing in token" });
-    if (!role)
-      return res.status(400).json({ error: "User role missing in token" });
-    res.json({ user: { id, role } });
+    await bouncer(req, res, async (db) => {
+      if (!req.user) throw new Error("Unauthorized");
+      const id = req.user.userId ?? req.user.id ?? req.user.sub ?? null;
+      const role = req.user.role ?? null;
+      if (!id) throw new Error("User id missing in token");
+      if (!role) throw new Error("User role missing in token");
+      return { user: { id, role } };
+    });
   }
 
   static async register(req, res, next) {

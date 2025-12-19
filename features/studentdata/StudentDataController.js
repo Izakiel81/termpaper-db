@@ -1,39 +1,35 @@
 import StudentDataService from "./StudentDataService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class StudentDataController {
   static async getAllStudentData(req, res, next) {
-    try {
-      const result = await StudentDataService.getAllStudentData();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await StudentDataService.getAllStudentData(db);
+      return result;
+    });
   }
 
   static async getStudentDataById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Student Data ID is required" });
+        throw new Error("Student Data ID is required");
       }
 
-      const result = await StudentDataService.getStudentDataById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await StudentDataService.getStudentDataById(id, db);
+      return result;
+    });
   }
 
   static async createStudentData(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { journalId, studentId, lesson, mark, status, note } = req.body;
 
       if (!journalId || !studentId || !lesson || !mark || !status) {
-        return res.status(400).json({
-          error:
-            "journalId, studentId, lesson, mark, and status are required",
-        });
+        throw new Error(
+          "journalId, studentId, lesson, mark, and status are required",
+        );
       }
 
       const result = await StudentDataService.createStudentData(
@@ -43,15 +39,14 @@ class StudentDataController {
         mark,
         status,
         note || null,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateStudentData(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { journalId, studentId, lesson, mark, status, note } = req.body;
 
@@ -63,10 +58,9 @@ class StudentDataController {
         !mark ||
         !status
       ) {
-        return res.status(400).json({
-          error:
-            "id, journalId, studentId, lesson, mark, and status are required",
-        });
+        throw new Error(
+          "id, journalId, studentId, lesson, mark, and status are required",
+        );
       }
 
       const result = await StudentDataService.updateStudentData(
@@ -77,39 +71,32 @@ class StudentDataController {
         mark,
         status,
         note || null,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteStudentData(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Student Data ID is required" });
+        throw new Error("Student Data ID is required");
       }
 
-      const result = await StudentDataService.deleteStudentData(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await StudentDataService.deleteStudentData(id, db);
+      return result;
+    });
   }
 
   static async getStudentDataMarks7d(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId } = req.params;
-      if (!studentId) {
-        return res.status(400).json({ error: "Student ID is required" });
-      }
-      const result = await StudentDataService.getStudentDataMarks7d(studentId);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      if (!studentId) throw new Error("Student ID is required");
+      const result = await StudentDataService.getStudentDataMarks7d(studentId, db);
+      return result;
+    });
   }
 }
 

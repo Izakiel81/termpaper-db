@@ -65,18 +65,16 @@ class ParentController {
   }
 
   static async deleteParent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Parent ID is required" });
+        throw new Error("Parent ID is required");
       }
 
-      const result = await ParentService.deleteParent(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await ParentService.deleteParent(id, db);
+      return result;
+    });
   }
 }
 

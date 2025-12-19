@@ -1,9 +1,10 @@
 import TimetableModel from "../../lib/models/TimetabModel.js";
+import pool from "../../lib/db.js";
 
 class TimetableService {
-  static async getAllTimetables() {
+  static async getAllTimetables(db = pool) {
     try {
-      const timetables = await TimetableModel.find();
+      const timetables = await TimetableModel.find(db);
       return { timetables };
     } catch (error) {
       console.error("Service Error in getAllTimetables:", error.message);
@@ -11,9 +12,9 @@ class TimetableService {
     }
   }
 
-  static async getTimetableById(timetableId) {
+  static async getTimetableById(timetableId, db = pool) {
     try {
-      const timetable = await TimetableModel.findById(timetableId);
+      const timetable = await TimetableModel.findById(timetableId, db);
       if (!timetable) {
         throw new Error(`Timetable with ID ${timetableId} not found`);
       }
@@ -24,9 +25,9 @@ class TimetableService {
     }
   }
 
-  static async createTimetable(name, classId) {
+  static async createTimetable(name, classId, db = pool) {
     try {
-      const timetable = await TimetableModel.create(name, classId);
+      const timetable = await TimetableModel.create(name, classId, db);
       return { timetable, message: "Timetable created successfully" };
     } catch (error) {
       console.error("Service Error in createTimetable:", error.message);
@@ -34,9 +35,9 @@ class TimetableService {
     }
   }
 
-  static async updateTimetable(timetableId, name, classId) {
+  static async updateTimetable(timetableId, name, classId, db = pool) {
     try {
-      const timetable = await TimetableModel.update(timetableId, name, classId);
+      const timetable = await TimetableModel.update(timetableId, name, classId, db);
       return { timetable, message: "Timetable updated successfully" };
     } catch (error) {
       console.error("Service Error in updateTimetable:", error.message);
@@ -44,9 +45,9 @@ class TimetableService {
     }
   }
 
-  static async deleteTimetable(timetableId) {
+  static async deleteTimetable(timetableId, db = pool) {
     try {
-      const result = await TimetableModel.delete(timetableId);
+      const result = await TimetableModel.delete(timetableId, db);
       return result;
     } catch (error) {
       console.error("Service Error in deleteTimetable:", error.message);
@@ -54,9 +55,9 @@ class TimetableService {
     }
   }
 
-  static async getWeeklyTimetable(timetableId) {
+  static async getWeeklyTimetable(timetableId, db = pool) {
     try {
-      const timetable = await TimetableModel.weekById(timetableId);
+      const timetable = await TimetableModel.weekById(timetableId, db);
       return { timetable: timetable || [] };
     } catch (error) {
       console.error("Service Error in getWeeklyTimetable:", error.message);
@@ -64,9 +65,9 @@ class TimetableService {
     }
   }
 
-  static async getTimetableByStudentId(studentId) {
+  static async getTimetableByStudentId(studentId, db = pool) {
     try {
-      const timetable = await TimetableModel.findTimetablebyStudentId(studentId);
+      const timetable = await TimetableModel.findTimetablebyStudentId(studentId, db);
       return { timetable };
     } catch (error) {
       console.error("Service Error in getTimetableByStudentId:", error.message);

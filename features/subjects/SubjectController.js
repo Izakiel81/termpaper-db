@@ -1,45 +1,38 @@
 import SubjectService from "./SubjectService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class SubjectController {
   static async getAllSubjects(req, res, next) {
-    try {
-      const result = await SubjectService.getAllSubjects();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await SubjectService.getAllSubjects(db);
+      return result;
+    });
   }
 
   static async createSubject(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, program } = req.body;
 
       if (!name || !program) {
-        return res
-          .status(400)
-          .json({ error: "name and program are required" });
+        throw new Error("name and program are required");
       }
 
-      const result = await SubjectService.createSubject(name, program);
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await SubjectService.createSubject(name, program, db);
+      return result;
+    });
   }
 
   static async deleteSubject(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Subject ID is required" });
+        throw new Error("Subject ID is required");
       }
 
-      const result = await SubjectService.deleteSubject(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await SubjectService.deleteSubject(id, db);
+      return result;
+    });
   }
 }
 

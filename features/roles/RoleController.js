@@ -1,76 +1,65 @@
 import RoleService from "./RoleService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class RoleController {
   static async getAllRoles(req, res, next) {
-    try {
-      const result = await RoleService.getAllRoles();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await RoleService.getAllRoles(db);
+      return result;
+    });
   }
 
   static async getRoleById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Role ID is required" });
+        throw new Error("Role ID is required");
       }
 
-      const result = await RoleService.getRoleById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await RoleService.getRoleById(id, db);
+      return result;
+    });
   }
 
   static async createRole(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { roleName } = req.body;
 
       if (!roleName) {
-        return res.status(400).json({ error: "roleName is required" });
+        throw new Error("roleName is required");
       }
 
-      const result = await RoleService.createRole(roleName);
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await RoleService.createRole(roleName, db);
+      return result;
+    });
   }
 
   static async updateRole(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { roleName } = req.body;
 
       if (!id || !roleName) {
-        return res
-          .status(400)
-          .json({ error: "id and roleName are required" });
+        throw new Error("id and roleName are required");
       }
 
-      const result = await RoleService.updateRole(id, roleName);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await RoleService.updateRole(id, roleName, db);
+      return result;
+    });
   }
 
   static async deleteRole(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Role ID is required" });
+        throw new Error("Role ID is required");
       }
 
-      const result = await RoleService.deleteRole(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await RoleService.deleteRole(id, db);
+      return result;
+    });
   }
 }
 

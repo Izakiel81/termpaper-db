@@ -1,38 +1,31 @@
-import tempService from "./tempService.js";
+import TempService from "./tempService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 class tempController {
-  async getUsers(req, res, next) {
-    try {
-      const users = await tempService.getUsers();
-      res.status(200).json({ users: users.rows, users_count: users.rowCount });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+  static async getUsers(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const users = await TempService.getUsers(db);
+      return { users: users.rows, users_count: users.rowCount };
+    });
   }
-  async createData(req, res, next) {
-    try {
-      const users = await tempService.createDataSet();
-      res.status(200).json({ users });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+  static async createData(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const users = await TempService.createDataSet(db);
+      return { users };
+    });
   }
-  async assignRoles(req, res, next) {
-    try {
+  static async assignRoles(req, res, next) {
+    await bouncer(req, res, async (db) => {
       const { startFrom, roleId } = req.body;
-      const roles = await tempService.assignRoles(startFrom, roleId);
-      res.status(200).json({ result: roles });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const roles = await TempService.assignRoles(startFrom, roleId, db);
+      return { result: roles };
+    });
   }
-  async assignUserToEntity(req, res, next) {
-    try {
-      const entities = await tempService.assignUsersToEntities();
-      res.status(200).json({ result: entities });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+  static async assignUserToEntity(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const entities = await TempService.assignUsersToEntities(db);
+      return { result: entities };
+    });
   }
 }
 
-export default new tempController();
+export default tempController;

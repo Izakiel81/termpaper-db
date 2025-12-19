@@ -1,106 +1,87 @@
 import TimetableService from "./TimetableService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class TimetableController {
   static async getAllTimetables(req, res, next) {
-    try {
-      const result = await TimetableService.getAllTimetables();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await TimetableService.getAllTimetables(db);
+      return result;
+    });
   }
 
   static async getTimetableById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Timetable ID is required" });
+        throw new Error("Timetable ID is required");
       }
 
-      const result = await TimetableService.getTimetableById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TimetableService.getTimetableById(id, db);
+      return result;
+    });
   }
 
   static async createTimetable(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, classId } = req.body;
 
       if (!name || !classId) {
-        return res
-          .status(400)
-          .json({ error: "name and classId are required" });
+        throw new Error("name and classId are required");
       }
 
-      const result = await TimetableService.createTimetable(name, classId);
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TimetableService.createTimetable(name, classId, db);
+      return result;
+    });
   }
 
   static async updateTimetable(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, classId } = req.body;
 
       if (!id || !name || !classId) {
-        return res.status(400).json({
-          error: "id, name, and classId are required",
-        });
+        throw new Error("id, name, and classId are required");
       }
 
-      const result = await TimetableService.updateTimetable(id, name, classId);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TimetableService.updateTimetable(id, name, classId, db);
+      return result;
+    });
   }
 
   static async deleteTimetable(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Timetable ID is required" });
+        throw new Error("Timetable ID is required");
       }
 
-      const result = await TimetableService.deleteTimetable(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TimetableService.deleteTimetable(id, db);
+      return result;
+    });
   }
 
   static async getWeeklyTimetable(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Timetable ID is required" });
+        throw new Error("Timetable ID is required");
       }
       console.log("[controller] getWeeklyTimetable id=", id);
-      const result = await TimetableService.getWeeklyTimetable(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TimetableService.getWeeklyTimetable(id, db);
+      return result;
+    });
   }
 
   static async getTimetableByStudentId(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
-      if (!id) {
-        return res.status(400).json({ error: "Student ID is required" });
-      }
-      const result = await TimetableService.getTimetableByStudentId(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      if (!id) throw new Error("Student ID is required");
+      const result = await TimetableService.getTimetableByStudentId(id, db);
+      return result;
+    });
   }
 }
 
