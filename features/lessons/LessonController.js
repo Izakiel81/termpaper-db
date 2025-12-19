@@ -1,32 +1,29 @@
 import LessonService from "./LessonService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class LessonController {
   static async getAllLessons(req, res, next) {
-    try {
-      const result = await LessonService.getAllLessons();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await LessonService.getAllLessons(db);
+      return result;
+    });
   }
 
   static async getLessonById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Lesson ID is required" });
+        throw new Error("Lesson ID is required");
       }
 
-      const result = await LessonService.getLessonById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await LessonService.getLessonById(id, db);
+      return result;
+    });
   }
 
   static async createLesson(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, className, subjectId, materialId, teacherId, date } =
         req.body;
 
@@ -38,10 +35,9 @@ class LessonController {
         !teacherId ||
         !date
       ) {
-        return res.status(400).json({
-          error:
-            "name, className, subjectId, materialId, teacherId, and date are required",
-        });
+        throw new Error(
+          "name, className, subjectId, materialId, teacherId, and date are required",
+        );
       }
 
       const result = await LessonService.createLesson(
@@ -51,15 +47,14 @@ class LessonController {
         materialId,
         teacherId,
         date,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateLesson(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, className, subjectId, materialId, teacherId, date } =
         req.body;
@@ -73,10 +68,9 @@ class LessonController {
         !teacherId ||
         !date
       ) {
-        return res.status(400).json({
-          error:
-            "id, name, className, subjectId, materialId, teacherId, and date are required",
-        });
+        throw new Error(
+          "id, name, className, subjectId, materialId, teacherId, and date are required",
+        );
       }
 
       const result = await LessonService.updateLesson(
@@ -87,26 +81,23 @@ class LessonController {
         materialId,
         teacherId,
         date,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteLesson(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Lesson ID is required" });
+        throw new Error("Lesson ID is required");
       }
 
-      const result = await LessonService.deleteLesson(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await LessonService.deleteLesson(id, db);
+      return result;
+    });
   }
 }
 

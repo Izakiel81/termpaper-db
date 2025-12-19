@@ -1,90 +1,74 @@
 import JournalService from "./JournalService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class JournalController {
   static async getAllJournals(req, res, next) {
-    try {
-      const result = await JournalService.getAllJournals();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await JournalService.getAllJournals(db);
+      return result;
+    });
   }
 
   static async getJournalById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Journal ID is required" });
+        throw new Error("Journal ID is required");
       }
 
-      const result = await JournalService.getJournalById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await JournalService.getJournalById(id, db);
+      return result;
+    });
   }
 
   static async createJournal(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { teacherId, name } = req.body;
 
       if (!teacherId || !name) {
-        return res
-          .status(400)
-          .json({ error: "teacherId and name are required" });
+        throw new Error("teacherId and name are required");
       }
 
-      const result = await JournalService.createJournal(teacherId, name);
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await JournalService.createJournal(teacherId, name, db);
+      return result;
+    });
   }
 
   static async updateJournal(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { teacherId, name } = req.body;
 
       if (!id || !teacherId || !name) {
-        return res
-          .status(400)
-          .json({ error: "id, teacherId, and name are required" });
+        throw new Error("id, teacherId, and name are required");
       }
 
-      const result = await JournalService.updateJournal(id, teacherId, name);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await JournalService.updateJournal(id, teacherId, name, db);
+      return result;
+    });
   }
 
   static async deleteJournal(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Journal ID is required" });
+        throw new Error("Journal ID is required");
       }
 
-      const result = await JournalService.deleteJournal(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await JournalService.deleteJournal(id, db);
+      return result;
+    });
   }
 
   static async getJournalByStudent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId } = req.params;
-      if (!studentId)
-        return res.status(400).json({ error: "studentId is required" });
-      const { entries } = await JournalService.getJournalByStudent(studentId);
-      res.status(200).json({ entries });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      if (!studentId) throw new Error("studentId is required");
+      const result = await JournalService.getJournalByStudent(studentId, db);
+      return result;
+    });
   }
 }
 

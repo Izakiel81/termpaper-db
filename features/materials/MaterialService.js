@@ -1,9 +1,10 @@
 import MaterialModule from "../../lib/models/MaterialModel.js";
+import pool from "../../lib/db.js";
 
 class MaterialService {
-  static async getAllMaterials() {
+  static async getAllMaterials(db = pool) {
     try {
-      const materials = await MaterialModule.findAll();
+      const materials = await MaterialModule.findAll(db);
       return { materials };
     } catch (error) {
       console.error("Service Error in getAllMaterials:", error.message);
@@ -11,9 +12,9 @@ class MaterialService {
     }
   }
 
-  static async getMaterialById(materialId) {
+  static async getMaterialById(materialId, db = pool) {
     try {
-      const material = await MaterialModule.findById(materialId);
+      const material = await MaterialModule.findById(materialId, db);
       if (!material) {
         throw new Error(`Material with ID ${materialId} not found`);
       }
@@ -24,9 +25,9 @@ class MaterialService {
     }
   }
 
-  static async createMaterial(name, description, link) {
+  static async createMaterial(name, description, link, db = pool) {
     try {
-      const materialId = await MaterialModule.create(name, description, link);
+      const materialId = await MaterialModule.create(name, description, link, db);
       return { materialId, message: "Material created successfully" };
     } catch (error) {
       console.error("Service Error in createMaterial:", error.message);
@@ -34,9 +35,9 @@ class MaterialService {
     }
   }
 
-  static async updateMaterial(materialId, name, description, link) {
+  static async updateMaterial(materialId, name, description, link, db = pool) {
     try {
-      await MaterialModule.update(materialId, name, description, link);
+      await MaterialModule.update(materialId, name, description, link, db);
       return { message: "Material updated successfully" };
     } catch (error) {
       console.error("Service Error in updateMaterial:", error.message);
@@ -44,9 +45,9 @@ class MaterialService {
     }
   }
 
-  static async deleteMaterial(materialId) {
+  static async deleteMaterial(materialId, db = pool) {
     try {
-      await MaterialModule.delete(materialId);
+      await MaterialModule.delete(materialId, db);
       return { message: `Material ${materialId} deleted successfully` };
     } catch (error) {
       console.error("Service Error in deleteMaterial:", error.message);

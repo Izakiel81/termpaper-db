@@ -1,9 +1,10 @@
 import TeacherModel from "../../lib/models/TeacherModel.js";
+import pool from "../../lib/db.js";
 
 class TeacherService {
-  static async getAllTeachers() {
+  static async getAllTeachers(db = pool) {
     try {
-      const teachers = await TeacherModel.findAll();
+      const teachers = await TeacherModel.findAll(db);
       return { teachers };
     } catch (error) {
       console.error("Service Error in getAllTeachers:", error.message);
@@ -11,9 +12,9 @@ class TeacherService {
     }
   }
 
-  static async getTeacherById(teacherId) {
+  static async getTeacherById(teacherId, db = pool) {
     try {
-      const teacher = await TeacherModel.findById(teacherId);
+      const teacher = await TeacherModel.findById(teacherId, db);
       if (!teacher) {
         throw new Error(`Teacher with ID ${teacherId} not found`);
       }
@@ -24,9 +25,9 @@ class TeacherService {
     }
   }
 
-  static async getTeachersWithClasses() {
+  static async getTeachersWithClasses(db = pool) {
     try {
-      const teachers = await TeacherModel.withClasses();
+      const teachers = await TeacherModel.withClasses(db);
       return { teachers };
     } catch (error) {
       console.error("Service Error in getTeachersWithClasses:", error.message);
@@ -34,12 +35,13 @@ class TeacherService {
     }
   }
 
-  static async getTeacherSalary(teacherId, fromDate, toDate) {
+  static async getTeacherSalary(teacherId, fromDate, toDate, db = pool) {
     try {
       const salary = await TeacherModel.recieveSalary(
         teacherId,
         fromDate,
         toDate,
+        db,
       );
       return { salary };
     } catch (error) {
@@ -48,7 +50,7 @@ class TeacherService {
     }
   }
 
-  static async createTeacher(name, surname, patronym, phone, user_id) {
+  static async createTeacher(name, surname, patronym, phone, user_id, db = pool) {
     try {
       const teacherId = await TeacherModel.create(
         name,
@@ -56,6 +58,7 @@ class TeacherService {
         patronym,
         phone,
         user_id,
+        db,
       );
       return { teacherId, message: "Teacher created successfully" };
     } catch (error) {
@@ -71,6 +74,7 @@ class TeacherService {
     patronym,
     phone,
     user_id,
+    db = pool,
   ) {
     try {
       await TeacherModel.update(
@@ -80,6 +84,7 @@ class TeacherService {
         patronym,
         phone,
         user_id,
+        db,
       );
       return { message: "Teacher updated successfully" };
     } catch (error) {
@@ -88,9 +93,9 @@ class TeacherService {
     }
   }
 
-  static async deleteTeacher(teacherId) {
+  static async deleteTeacher(teacherId, db = pool) {
     try {
-      await TeacherModel.delete(teacherId);
+      await TeacherModel.delete(teacherId, db);
       return { message: `Teacher ${teacherId} deleted successfully` };
     } catch (error) {
       console.error("Service Error in deleteTeacher:", error.message);

@@ -1,63 +1,53 @@
 import HomeworkService from "./HomeworkService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class HomeworkController {
   static async getAllHomework(req, res, next) {
-    try {
-      const result = await HomeworkService.getAllHomework();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await HomeworkService.getAllHomework(db);
+      return result;
+    });
   }
 
   static async getHomeworkById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Homework ID is required" });
+        throw new Error("Homework ID is required");
       }
 
-      const result = await HomeworkService.getHomeworkById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await HomeworkService.getHomeworkById(id, db);
+      return result;
+    });
   }
 
   static async getHomeworkByStudentOrClass(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { studentId } = req.params;
 
       if (!studentId) {
-        return res.status(400).json({ error: "Student ID is required" });
+        throw new Error("Student ID is required");
       }
 
-      const result = await HomeworkService.getHomeworkByStudentOrClass(studentId);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await HomeworkService.getHomeworkByStudentOrClass(studentId, db);
+      return result;
+    });
   }
 
   static async getHomeworkForTomorrow(req, res, next) {
-    try {
-      const result = await HomeworkService.getHomeworkForTomorrow();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await HomeworkService.getHomeworkForTomorrow(db);
+      return result;
+    });
   }
 
   static async createHomework(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, description, dueDate, subjectId, classId } = req.body;
 
       if (!name || !description || !dueDate || !subjectId || !classId) {
-        return res.status(400).json({
-          error:
-            "name, description, dueDate, subjectId, and classId are required",
-        });
+        throw new Error("name, description, dueDate, subjectId, and classId are required");
       }
 
       const result = await HomeworkService.createHomework(
@@ -66,22 +56,19 @@ class HomeworkController {
         dueDate,
         subjectId,
         classId,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateHomework(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, description, dueDate } = req.body;
 
       if (!id || !name || !description || !dueDate) {
-        return res.status(400).json({
-          error: "id, name, description, and dueDate are required",
-        });
+        throw new Error("id, name, description, and dueDate are required");
       }
 
       const result = await HomeworkService.updateHomework(
@@ -89,26 +76,23 @@ class HomeworkController {
         name,
         description,
         dueDate,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteHomework(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Homework ID is required" });
+        throw new Error("Homework ID is required");
       }
 
-      const result = await HomeworkService.deleteHomework(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await HomeworkService.deleteHomework(id, db);
+      return result;
+    });
   }
 }
 

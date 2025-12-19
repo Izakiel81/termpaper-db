@@ -1,9 +1,10 @@
 import ParentModel from "../../lib/models/ParentModel.js";
+import pool from "../../lib/db.js";
 
 class ParentService {
-  static async getAllParents() {
+  static async getAllParents(db = pool) {
     try {
-      const parents = await ParentModel.findAll();
+      const parents = await ParentModel.findAll(db);
       return { parents };
     } catch (error) {
       console.error("Service Error in getAllParents:", error.message);
@@ -11,9 +12,9 @@ class ParentService {
     }
   }
 
-  static async getParentById(parentId) {
+  static async getParentById(parentId, db = pool) {
     try {
-      const parent = await ParentModel.findById(parentId);
+      const parent = await ParentModel.findById(parentId, db);
       if (!parent) {
         throw new Error(`Parent with ID ${parentId} not found`);
       }
@@ -24,7 +25,7 @@ class ParentService {
     }
   }
 
-  static async createParent(name, surname, patronym, phone, user_id = null) {
+  static async createParent(name, surname, patronym, phone, user_id = null, db = pool) {
     try {
       const parentId = await ParentModel.create(
         name,
@@ -32,6 +33,7 @@ class ParentService {
         patronym,
         phone,
         user_id,
+        db,
       );
       return { parentId, message: "Parent created successfully" };
     } catch (error) {
@@ -47,6 +49,7 @@ class ParentService {
     patronym,
     phone,
     user_id = null,
+    db = pool,
   ) {
     try {
       await ParentModel.update(
@@ -56,6 +59,7 @@ class ParentService {
         patronym,
         phone,
         user_id,
+        db,
       );
       return { message: "Parent updated successfully" };
     } catch (error) {
@@ -64,9 +68,9 @@ class ParentService {
     }
   }
 
-  static async deleteParent(parentId) {
+  static async deleteParent(parentId, db = pool) {
     try {
-      await ParentModel.delete(parentId);
+      await ParentModel.delete(parentId, db);
       return { message: `Parent ${parentId} deleted successfully` };
     } catch (error) {
       console.error("Service Error in deleteParent:", error.message);

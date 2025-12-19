@@ -1,38 +1,33 @@
 import ParentService from "./ParentService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class ParentController {
   static async getAllParents(req, res, next) {
-    try {
-      const result = await ParentService.getAllParents();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await ParentService.getAllParents(db);
+      return result;
+    });
   }
 
   static async getParentById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Parent ID is required" });
+        throw new Error("Parent ID is required");
       }
 
-      const result = await ParentService.getParentById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await ParentService.getParentById(id, db);
+      return result;
+    });
   }
 
   static async createParent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
-        return res.status(400).json({
-          error: "name, surname, patronym, and phone are required",
-        });
+        throw new Error("name, surname, patronym, and phone are required");
       }
 
       const result = await ParentService.createParent(
@@ -41,22 +36,19 @@ class ParentController {
         patronym,
         phone,
         user_id,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateParent(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
-        return res.status(400).json({
-          error: "id, name, surname, patronym, and phone are required",
-        });
+        throw new Error("id, name, surname, patronym, and phone are required");
       }
 
       const result = await ParentService.updateParent(
@@ -66,11 +58,10 @@ class ParentController {
         patronym,
         phone,
         user_id,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteParent(req, res, next) {

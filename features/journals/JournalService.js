@@ -1,9 +1,10 @@
 import JournalModel from "../../lib/models/JournalModel.js";
+import pool from "../../lib/db.js";
 
 class JournalService {
-  static async getAllJournals() {
+  static async getAllJournals(db = pool) {
     try {
-      const journals = await JournalModel.findAll();
+      const journals = await JournalModel.findAll(db);
       return { journals };
     } catch (error) {
       console.error("Service Error in getAllJournals:", error.message);
@@ -11,9 +12,9 @@ class JournalService {
     }
   }
 
-  static async getJournalById(journalId) {
+  static async getJournalById(journalId, db = pool) {
     try {
-      const journal = await JournalModel.findById(journalId);
+      const journal = await JournalModel.findById(journalId, db);
       if (!journal) {
         throw new Error(`Journal with ID ${journalId} not found`);
       }
@@ -24,9 +25,9 @@ class JournalService {
     }
   }
 
-  static async createJournal(teacherId, name) {
+  static async createJournal(teacherId, name, db = pool) {
     try {
-      const journal = await JournalModel.create(teacherId, name);
+      const journal = await JournalModel.create(teacherId, name, db);
       return { journal, message: "Journal created successfully" };
     } catch (error) {
       console.error("Service Error in createJournal:", error.message);
@@ -34,9 +35,9 @@ class JournalService {
     }
   }
 
-  static async updateJournal(journalId, teacherId, name) {
+  static async updateJournal(journalId, teacherId, name, db = pool) {
     try {
-      const journal = await JournalModel.update(journalId, teacherId, name);
+      const journal = await JournalModel.update(journalId, teacherId, name, db);
       return { journal, message: "Journal updated successfully" };
     } catch (error) {
       console.error("Service Error in updateJournal:", error.message);
@@ -44,9 +45,9 @@ class JournalService {
     }
   }
 
-  static async deleteJournal(journalId) {
+  static async deleteJournal(journalId, db = pool) {
     try {
-      const result = await JournalModel.delete(journalId);
+      const result = await JournalModel.delete(journalId, db);
       return result;
     } catch (error) {
       console.error("Service Error in deleteJournal:", error.message);
@@ -54,9 +55,9 @@ class JournalService {
     }
   }
 
-  static async getJournalByStudent(studentId) {
+  static async getJournalByStudent(studentId, db = pool) {
     try {
-      const entries = await JournalModel.findByStudentId(studentId);
+      const entries = await JournalModel.findByStudentId(studentId, db);
       return { entries };
     } catch (error) {
       console.error("Service Error in getJournalByStudent:", error.message);

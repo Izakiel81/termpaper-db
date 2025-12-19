@@ -1,68 +1,58 @@
 import TeacherService from "./TeacherService.js";
+import { bouncer } from "../../lib/db-helpers/bouncer.js";
 
 class TeacherController {
   static async getAllTeachers(req, res, next) {
-    try {
-      const result = await TeacherService.getAllTeachers();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await TeacherService.getAllTeachers(db);
+      return result;
+    });
   }
 
   static async getTeacherById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Teacher ID is required" });
+        throw new Error("Teacher ID is required");
       }
 
-      const result = await TeacherService.getTeacherById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TeacherService.getTeacherById(id, db);
+      return result;
+    });
   }
 
   static async getTeachersWithClasses(req, res, next) {
-    try {
-      const result = await TeacherService.getTeachersWithClasses();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await TeacherService.getTeachersWithClasses(db);
+      return result;
+    });
   }
 
   static async getTeacherSalary(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { teacherId, fromDate, toDate } = req.query;
 
       if (!teacherId || !fromDate || !toDate) {
-        return res.status(400).json({
-          error: "teacherId, fromDate, and toDate are required",
-        });
+        throw new Error("teacherId, fromDate, and toDate are required");
       }
 
       const result = await TeacherService.getTeacherSalary(
         teacherId,
         fromDate,
         toDate,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async createTeacher(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
-        return res.status(400).json({
-          error: "name, surname, patronym, and phone are required",
-        });
+        throw new Error("name, surname, patronym, and phone are required");
       }
 
       const result = await TeacherService.createTeacher(
@@ -71,22 +61,19 @@ class TeacherController {
         patronym,
         phone,
         user_id,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateTeacher(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
-        return res.status(400).json({
-          error: "id, name, surname, patronym, and phone are required",
-        });
+        throw new Error("id, name, surname, patronym, and phone are required");
       }
 
       const result = await TeacherService.updateTeacher(
@@ -96,26 +83,23 @@ class TeacherController {
         patronym,
         phone,
         user_id,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteTeacher(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Teacher ID is required" });
+        throw new Error("Teacher ID is required");
       }
 
-      const result = await TeacherService.deleteTeacher(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await TeacherService.deleteTeacher(id, db);
+      return result;
+    });
   }
 }
 

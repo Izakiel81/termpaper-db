@@ -1,9 +1,10 @@
 import DayModule from "../../lib/models/DayModel.js";
+import pool from "../../lib/db.js";
 
 class DayService {
-  static async getAllDays() {
+  static async getAllDays(db = pool) {
     try {
-      const days = await DayModule.findAll();
+      const days = await DayModule.findAll(db);
       return { days };
     } catch (error) {
       console.error("Service Error in getAllDays:", error.message);
@@ -11,9 +12,9 @@ class DayService {
     }
   }
 
-  static async getDayById(dayId) {
+  static async getDayById(dayId, db = pool) {
     try {
-      const day = await DayModule.findById(dayId);
+      const day = await DayModule.findById(dayId, db);
       if (!day) {
         throw new Error(`Day with ID ${dayId} not found`);
       }
@@ -24,9 +25,9 @@ class DayService {
     }
   }
 
-  static async createDay(dayName, dayTime, dayWeekday) {
+  static async createDay(dayName, dayTime, dayWeekday, db = pool) {
     try {
-      const dayId = await DayModule.create(dayName, dayTime, dayWeekday);
+      const dayId = await DayModule.create(dayName, dayTime, dayWeekday, db);
       return { dayId, message: "Day created successfully" };
     } catch (error) {
       console.error("Service Error in createDay:", error.message);
@@ -34,9 +35,9 @@ class DayService {
     }
   }
 
-  static async updateDay(dayId, dayName, dayTime, dayWeekday) {
+  static async updateDay(dayId, dayName, dayTime, dayWeekday, db = pool) {
     try {
-      await DayModule.update(dayId, dayName, dayTime, dayWeekday);
+      await DayModule.update(dayId, dayName, dayTime, dayWeekday, db);
       return { message: "Day updated successfully" };
     } catch (error) {
       console.error("Service Error in updateDay:", error.message);
@@ -44,9 +45,9 @@ class DayService {
     }
   }
 
-  static async deleteDay(dayId) {
+  static async deleteDay(dayId, db = pool) {
     try {
-      await DayModule.delete(dayId);
+      await DayModule.delete(dayId, db);
       return { message: `Day ${dayId} deleted successfully` };
     } catch (error) {
       console.error("Service Error in deleteDay:", error.message);

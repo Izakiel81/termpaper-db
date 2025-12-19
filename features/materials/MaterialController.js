@@ -1,60 +1,52 @@
 import MaterialService from "./MaterialService.js";
+import bouncer from "../../lib/db-helpers/bouncer.js";
 
 class MaterialController {
   static async getAllMaterials(req, res, next) {
-    try {
-      const result = await MaterialService.getAllMaterials();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+    await bouncer(req, res, async (db) => {
+      const result = await MaterialService.getAllMaterials(db);
+      return result;
+    });
   }
 
   static async getMaterialById(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Material ID is required" });
+        throw new Error("Material ID is required");
       }
 
-      const result = await MaterialService.getMaterialById(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await MaterialService.getMaterialById(id, db);
+      return result;
+    });
   }
 
   static async createMaterial(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { name, description, link } = req.body;
 
       if (!name || !description || !link) {
-        return res
-          .status(400)
-          .json({ error: "name, description, and link are required" });
+        throw new Error("name, description, and link are required");
       }
 
       const result = await MaterialService.createMaterial(
         name,
         description,
         link,
+        db,
       );
-      res.status(201).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async updateMaterial(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
       const { name, description, link } = req.body;
 
       if (!id || !name || !description || !link) {
-        return res.status(400).json({
-          error: "id, name, description, and link are required",
-        });
+        throw new Error("id, name, description, and link are required");
       }
 
       const result = await MaterialService.updateMaterial(
@@ -62,26 +54,23 @@ class MaterialController {
         name,
         description,
         link,
+        db,
       );
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      return result;
+    });
   }
 
   static async deleteMaterial(req, res, next) {
-    try {
+    await bouncer(req, res, async (db) => {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ error: "Material ID is required" });
+        throw new Error("Material ID is required");
       }
 
-      const result = await MaterialService.deleteMaterial(id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+      const result = await MaterialService.deleteMaterial(id, db);
+      return result;
+    });
   }
 }
 

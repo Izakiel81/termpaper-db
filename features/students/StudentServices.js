@@ -1,18 +1,18 @@
 import pool from "../../lib/db.js";
 import StudentModel from "../../lib/models/StudentModel.js";
 class StudentServives {
-  static async getStudents() {
+  static async getStudents(db = pool) {
     try {
-      const students = await StudentModel.findAll();
+      const students = await StudentModel.findAll(db);
       return { students };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
 
-  static async getStudentById(id) {
+  static async getStudentById(id, db = pool) {
     try {
-      const student = await StudentModel.findById(id);
+      const student = await StudentModel.findById(id, db);
       return { student };
     } catch (error) {
       console.error({ error: error.message });
@@ -21,25 +21,25 @@ class StudentServives {
 
   // Views
 
-  static async getStudentsAVGAbove7() {
+  static async getStudentsAVGAbove7(db = pool) {
     try {
-      const student = await StudentModel.AVGAbove7();
+      const student = await StudentModel.AVGAbove7(db);
       return { student };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentsByClass() {
+  static async getStudentsByClass(db = pool) {
     try {
-      const students = await StudentModel.getByClass();
+      const students = await StudentModel.getByClass(db);
       return { students };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentRanking() {
+  static async getStudentRanking(db = pool) {
     try {
-      const students = await StudentModel.recieveRanking();
+      const students = await StudentModel.recieveRanking(db);
       return { students };
     } catch (error) {
       console.error({ error: error.message });
@@ -48,52 +48,55 @@ class StudentServives {
 
   // Functions
 
-  static async getStudentsByParent(parentId) {
+  static async getStudentsByParent(parentId, db = pool) {
     try {
-      const students = await StudentModel.findByParentId(parentId);
+      const students = await StudentModel.findByParentId(parentId, db);
       return { students };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentGradeAndAbsences(studentId, startDate, endDate) {
+  static async getStudentGradeAndAbsences(studentId, startDate, endDate, db = pool) {
     try {
       const students = await StudentModel.recieveGradesAndAbsences(
         studentId,
         startDate,
         endDate,
+        db,
       );
       return { students };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentMarks(studentId, fromDate, toDate) {
+  static async getStudentMarks(studentId, fromDate, toDate, db = pool) {
     try {
       const students = await StudentModel.recieveMarks(
         studentId,
         fromDate,
         toDate,
+        db,
       );
       return { students };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentAttendanceReport(studentId, fromDate, toDate) {
+  static async getStudentAttendanceReport(studentId, fromDate, toDate, db = pool) {
     try {
-      const report = await StudentModel.recieveAttendanceReport(studentId);
+      const report = await StudentModel.recieveAttendanceReport(studentId, db);
       return { report };
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async getStudentDayPlan(studentId, fromDate, toDate) {
+  static async getStudentDayPlan(studentId, fromDate, toDate, db = pool) {
     try {
       const day_plan = await StudentModel.recieveDayPlan(
         studentId,
         fromDate,
         toDate,
+        db,
       );
       return { day_plan };
     } catch (error) {
@@ -110,6 +113,7 @@ class StudentServives {
     phone,
     class_c,
     user_id = null,
+    db = pool,
   ) {
     try {
       const newStudent = await StudentModel.create(
@@ -119,6 +123,7 @@ class StudentServives {
         phone,
         class_c,
         user_id,
+        db,
       );
 
       return { newStudent };
@@ -134,6 +139,7 @@ class StudentServives {
     phone,
     class_c,
     user_id,
+    db = pool,
   ) {
     try {
       await StudentModel.update(
@@ -144,15 +150,18 @@ class StudentServives {
         phone,
         class_c,
         user_id,
+        db,
       );
     } catch (error) {
       console.error({ error: error.message });
     }
   }
-  static async deleteStudent(id) {
+  static async deleteStudent(id, db = pool) {
     try {
-      await S;
-    } catch (error) {}
+      await StudentModel.delete(id, db);
+    } catch (error) {
+      console.error({ error: error.message });
+    }
   }
 }
 export default StudentServives;

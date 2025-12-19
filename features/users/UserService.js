@@ -1,9 +1,10 @@
 import UserModel from "../../lib/models/UserModel.js";
+import pool from "../../lib/db.js";
 
 class UserService {
-  static async getAllUsers() {
+  static async getAllUsers(db = pool) {
     try {
-      const users = await UserModel.findAll();
+      const users = await UserModel.findAll(db);
       return { users };
     } catch (error) {
       console.error("Service Error in getAllUsers:", error.message);
@@ -11,9 +12,9 @@ class UserService {
     }
   }
 
-  static async getUserById(userId) {
+  static async getUserById(userId, db = pool) {
     try {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(userId, db);
       if (!user) {
         throw new Error(`User with ID ${userId} not found`);
       }
@@ -24,9 +25,9 @@ class UserService {
     }
   }
 
-  static async createUser(username, email, password) {
+  static async createUser(username, email, password, db = pool) {
     try {
-      const userId = await UserModel.create(username, email, password);
+      const userId = await UserModel.create(username, email, password, db);
       return { userId, message: "User created successfully" };
     } catch (error) {
       console.error("Service Error in createUser:", error.message);
@@ -34,9 +35,9 @@ class UserService {
     }
   }
 
-  static async updateUser(userId, username, email, password) {
+  static async updateUser(userId, username, email, password, db = pool) {
     try {
-      await UserModel.update(userId, username, email, password);
+      await UserModel.update(userId, username, email, password, db);
       return { message: "User updated successfully" };
     } catch (error) {
       console.error("Service Error in updateUser:", error.message);
@@ -44,9 +45,9 @@ class UserService {
     }
   }
 
-  static async deleteUser(userId) {
+  static async deleteUser(userId, db = pool) {
     try {
-      await UserModel.delete(userId);
+      await UserModel.delete(userId, db);
       return { message: `User ${userId} deleted successfully` };
     } catch (error) {
       console.error("Service Error in deleteUser:", error.message);
@@ -54,9 +55,9 @@ class UserService {
     }
   }
 
-  static async resetPassword(userId, newPassword) {
+  static async resetPassword(userId, newPassword, db = pool) {
     try {
-      await UserModel.reset_password(userId, newPassword);
+      await UserModel.reset_password(userId, newPassword, db);
       return { message: "Password reset successfully" };
     } catch (error) {
       console.error("Service Error in resetPassword:", error.message);
@@ -64,9 +65,9 @@ class UserService {
     }
   }
 
-  static async getUserData(userId) {
+  static async getUserData(userId, db = pool) {
     try {
-      const userData = await UserModel.getUserData(userId);
+      const userData = await UserModel.getUserData(userId, db);
       return { userData };
     } catch (error) {
       console.error("Service Error in getUserData:", error.message);

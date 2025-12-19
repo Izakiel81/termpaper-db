@@ -1,9 +1,10 @@
 import HomeworkModule from "../../lib/models/HomeworkModel.js";
+import pool from "../../lib/db.js";
 
 class HomeworkService {
-  static async getAllHomework() {
+  static async getAllHomework(db = pool) {
     try {
-      const homework = await HomeworkModule.findAll();
+      const homework = await HomeworkModule.findAll(db);
       return { homework };
     } catch (error) {
       console.error("Service Error in getAllHomework:", error.message);
@@ -11,9 +12,9 @@ class HomeworkService {
     }
   }
 
-  static async getHomeworkById(homeworkId) {
+  static async getHomeworkById(homeworkId, db = pool) {
     try {
-      const homework = await HomeworkModule.findById(homeworkId);
+      const homework = await HomeworkModule.findById(homeworkId, db);
       if (!homework) {
         throw new Error(`Homework with ID ${homeworkId} not found`);
       }
@@ -24,9 +25,9 @@ class HomeworkService {
     }
   }
 
-  static async getHomeworkByStudentOrClass(studentId) {
+  static async getHomeworkByStudentOrClass(studentId, db = pool) {
     try {
-      const homework = await HomeworkModule.recieveByStudentOrClass(studentId);
+      const homework = await HomeworkModule.recieveByStudentOrClass(studentId, db);
       return { homework };
     } catch (error) {
       console.error(
@@ -37,9 +38,9 @@ class HomeworkService {
     }
   }
 
-  static async getHomeworkForTomorrow() {
+  static async getHomeworkForTomorrow(db = pool) {
     try {
-      const homework = await HomeworkModule.reciefveForTomorrow();
+      const homework = await HomeworkModule.reciefveForTomorrow(db);
       return { homework };
     } catch (error) {
       console.error(
@@ -56,6 +57,7 @@ class HomeworkService {
     dueDate,
     subjectId,
     classId,
+    db = pool,
   ) {
     try {
       const homework = await HomeworkModule.create(
@@ -64,6 +66,7 @@ class HomeworkService {
         dueDate,
         subjectId,
         classId,
+        db,
       );
       return { homework, message: "Homework created successfully" };
     } catch (error) {
@@ -73,17 +76,22 @@ class HomeworkService {
   }
 
   static async updateHomework(
-    homeworkId,
+    id,
     name,
     description,
     dueDate,
+    db = pool,
   ) {
     try {
       const homework = await HomeworkModule.update(
-        homeworkId,
+        id,
         name,
-        description,
+        0,
+        0,
         dueDate,
+        description,
+        '',
+        db,
       );
       return { homework, message: "Homework updated successfully" };
     } catch (error) {
@@ -92,9 +100,9 @@ class HomeworkService {
     }
   }
 
-  static async deleteHomework(homeworkId) {
+  static async deleteHomework(id, db = pool) {
     try {
-      const result = await HomeworkModule.delete(homeworkId);
+      const result = await HomeworkModule.delete(id, db);
       return result;
     } catch (error) {
       console.error("Service Error in deleteHomework:", error.message);
