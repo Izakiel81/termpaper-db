@@ -15,12 +15,10 @@ export function authenticateJWT(req, res, next) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // require userId to identify the caller
-    if (!payload || !payload.userId) {
+    if (!payload || !payload.userId || !payload.role_name) {
       return res.status(401).json({ error: "Invalid token payload" });
     }
 
-    // Attach full payload to request for downstream handlers
     req.user = payload;
 
     next();
