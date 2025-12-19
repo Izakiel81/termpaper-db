@@ -18,7 +18,7 @@ import timetableRouter from "./timetables/TimetableRouter.js";
 import studentParentRouter from "./studentparents/StudentParentRouter.js";
 
 const router = Router();
-
+//TODO: Remove temp before shipping
 router.use("/temp", tempRouter);
 router.use("/students", studentsRouter);
 router.use("/teacher", teacherRouter);
