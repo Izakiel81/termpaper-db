@@ -82,9 +82,7 @@ class StudentServives {
   }
   static async getStudentAttendanceReport(studentId, fromDate, toDate) {
     try {
-      const report = await StudentModel.recieveAttendanceReport(
-        studentId,
-      );
+      const report = await StudentModel.recieveAttendanceReport(studentId);
       return { report };
     } catch (error) {
       console.error({ error: error.message });
@@ -105,7 +103,14 @@ class StudentServives {
 
   // Procedures
 
-  static async addStudent(name, surname, patronym, phone, class_c) {
+  static async addStudent(
+    name,
+    surname,
+    patronym,
+    phone,
+    class_c,
+    user_id = null,
+  ) {
     try {
       const newStudent = await StudentModel.create(
         name,
@@ -113,6 +118,7 @@ class StudentServives {
         patronym,
         phone,
         class_c,
+        user_id,
       );
 
       return { newStudent };
@@ -120,9 +126,25 @@ class StudentServives {
       console.error({ error: error.message });
     }
   }
-  static async updateStudent(id, name, surname, patronym, phone, class_c) {
+  static async updateStudent(
+    id,
+    name,
+    surname,
+    patronym,
+    phone,
+    class_c,
+    user_id,
+  ) {
     try {
-      await StudentModel.update(id, name, surname, patronym, phone, class_c);
+      await StudentModel.update(
+        id,
+        name,
+        surname,
+        patronym,
+        phone,
+        class_c,
+        user_id,
+      );
     } catch (error) {
       console.error({ error: error.message });
     }

@@ -91,9 +91,8 @@ class StudentController {
   static async getStudentAttendanceReport(req, res, next) {
     try {
       const { studentId, fromDate, toDate } = req.query;
-      const { report } = await studentService.getStudentAttendanceReport(
-        studentId,
-      );
+      const { report } =
+        await studentService.getStudentAttendanceReport(studentId);
       res.status(200).json({ report });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -123,6 +122,7 @@ class StudentController {
         patronym,
         phone,
         class_c,
+        user_id,
       );
       res.status(200).json({ newStudent });
     } catch (error) {
@@ -131,13 +131,12 @@ class StudentController {
   }
   static async updateStudent(req, res, next) {
     try {
-      const { name, surname, patronym, phone, class_c } = req.body;
+      const { name, surname, patronym, phone, class_c, user_id } = req.body;
       const id = req.params.id || req.body.id;
 
       if (!id || !name || !surname || !patronym || !phone) {
         return res.status(400).json({
-          error:
-            "id, name, surname, patronym, and phone are required",
+          error: "id, name, surname, patronym, and phone are required",
         });
       }
 
