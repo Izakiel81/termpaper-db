@@ -1,43 +1,31 @@
 import authService from "./authService.js";
 import bouncer from "../../lib/db-helpers/bouncer.js";
+
 class AuthController {
   static async login(req, res, next) {
     try {
       if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({
-          error:
-            "Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.",
-        });
+        return res.status(400).json({ error: "Missing JSON body." });
       }
 
-      const { username, email, password, role } = req.body || {};
+      const { username, email, password } = req.body;
       if (!username && !email)
         return res.status(400).json({ error: "username or email required" });
       if (!password)
         return res.status(400).json({ error: "password required" });
 
-      const tokens = await authService.login(username, email, password, role);
+      const tokens = await authService.login(username, email, password);
       res.json(tokens);
     } catch (error) {
-      if (error.message && error.message.toLowerCase().includes("required")) {
-        return res.status(400).json({ error: error.message });
-      }
       res.status(401).json({ error: error.message });
     }
   }
 
   static async refresh(req, res, next) {
     await bouncer(req, res, async (db) => {
-      if (!req.body || Object.keys(req.body).length === 0) {
-        throw new Error(
-          "Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.",
-        );
-      }
       const { refreshToken: oldToken } = req.body || {};
-      if (!oldToken) {
-        console.warn("[auth] refresh called without token from", req.ip);
-        throw new Error("Missing refresh token");
-      }
+      if (!oldToken) throw new Error("Missing refresh token");
+
       const newAccessToken = authService.refreshToken(oldToken);
       return { accessToken: newAccessToken };
     });
@@ -46,47 +34,39 @@ class AuthController {
   static async me(req, res) {
     await bouncer(req, res, async (db) => {
       if (!req.user) throw new Error("Unauthorized");
-      const id = req.user.userId ?? req.user.id ?? req.user.sub ?? null;
-      const role = req.user.role ?? null;
-      if (!id) throw new Error("User id missing in token");
-      if (!role) throw new Error("User role missing in token");
+      const id = req.user.userId ?? req.user.id;
+      const role = req.user.role;
+      if (!id || !role)
+        throw new Error("Token missing critical identity fields");
+
       return { user: { id, role } };
     });
   }
 
   static async register(req, res, next) {
     try {
-      if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({
-          error:
-            "Missing JSON body. Ensure Content-Type: application/json and a valid JSON payload are sent.",
-        });
-      }
-      const { username, email, password, role } = req.body || {};
-      if (!username)
-        return res.status(400).json({ error: "username required" });
-      if (!email) return res.status(400).json({ error: "email required" });
-      if (!password)
-        return res.status(400).json({ error: "password required" });
-      if (!role) return res.status(400).json({ error: "role is required" });
+      const { username, email, password } = req.body;
+      if (!username || !email || !password)
+        return res.status(400).json({ error: "All fields required" });
 
-      const tokens = await authService.register(
-        username,
-        email,
-        password,
-        role,
-      );
+      const tokens = await authService.register(username, email, password);
       res.status(201).json(tokens);
     } catch (error) {
-      if (error.code === "23505") {
-        // unique_violation
-        return res.status(409).json({ error: error.message });
-      }
-      if (error.message && error.message.toLowerCase().includes("required")) {
-        return res.status(400).json({ error: error.message });
-      }
+      if (error.code === "23505")
+        return res.status(409).json({ error: "User already exists" });
       res.status(400).json({ error: error.message });
     }
+  }
+
+  static async switchRole(req, res) {
+    await bouncer(req, res, async (db) => {
+      const { targetRole } = req.body;
+      if (!targetRole) throw new Error("targetRole required");
+
+      const userId = req.user.userId;
+      const result = await authService.switchRole(userId, targetRole);
+      return result;
+    });
   }
 }
 
