@@ -24,9 +24,15 @@ class ParentService {
     }
   }
 
-  static async createParent(name, surname, patronym, phone) {
+  static async createParent(name, surname, patronym, phone, user_id = null) {
     try {
-      const parentId = await ParentModel.create(name, surname, patronym, phone);
+      const parentId = await ParentModel.create(
+        name,
+        surname,
+        patronym,
+        phone,
+        user_id,
+      );
       return { parentId, message: "Parent created successfully" };
     } catch (error) {
       console.error("Service Error in createParent:", error.message);
@@ -34,9 +40,23 @@ class ParentService {
     }
   }
 
-  static async updateParent(parentId, name, surname, patronym, phone) {
+  static async updateParent(
+    parentId,
+    name,
+    surname,
+    patronym,
+    phone,
+    user_id = null,
+  ) {
     try {
-      await ParentModel.update(parentId, name, surname, patronym, phone);
+      await ParentModel.update(
+        parentId,
+        name,
+        surname,
+        patronym,
+        phone,
+        user_id,
+      );
       return { message: "Parent updated successfully" };
     } catch (error) {
       console.error("Service Error in updateParent:", error.message);
@@ -56,5 +76,3 @@ class ParentService {
 }
 
 export default ParentService;
-
-

@@ -27,7 +27,7 @@ class ParentController {
 
   static async createParent(req, res, next) {
     try {
-      const { name, surname, patronym, phone } = req.body;
+      const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
         return res.status(400).json({
@@ -40,6 +40,7 @@ class ParentController {
         surname,
         patronym,
         phone,
+        user_id,
       );
       res.status(201).json(result);
     } catch (error) {
@@ -50,7 +51,7 @@ class ParentController {
   static async updateParent(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, surname, patronym, phone } = req.body;
+      const { name, surname, patronym, phone, user_id } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
         return res.status(400).json({
@@ -64,6 +65,7 @@ class ParentController {
         surname,
         patronym,
         phone,
+        user_id,
       );
       res.status(200).json(result);
     } catch (error) {
@@ -88,4 +90,3 @@ class ParentController {
 }
 
 export default ParentController;
-
