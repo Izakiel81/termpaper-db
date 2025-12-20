@@ -84,7 +84,10 @@ class StudentServives {
   }
   static async getStudentAttendanceReport(studentId, fromDate, toDate, db = pool) {
     try {
-      const report = await StudentModel.recieveAttendanceReport(studentId, db);
+      const hasRange = !!fromDate && !!toDate;
+      const report = hasRange
+        ? await StudentModel.recieveGradesAndAbsences(studentId, fromDate, toDate, db)
+        : await StudentModel.recieveAttendanceReport(studentId, db);
       return { report };
     } catch (error) {
       console.error({ error: error.message });

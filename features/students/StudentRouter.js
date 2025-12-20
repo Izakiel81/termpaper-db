@@ -9,9 +9,9 @@ router.get("/avg-above-7", studentController.getStudentsAVGAbove7);
 router.get("/class", studentController.getStudentsByClass);
 router.get("/ranking", studentController.getStudentRanking);
 router.get("/by-parent/:parentId", studentController.getStudentsByParent);
-router.get("/grades-and-absences", studentController.getStudentGradeAndAbsences);
+router.get("/grades-and-absences/:id", studentController.getStudentGradeAndAbsences);
 router.get("/marks", studentController.getStudentMarks);
-router.get("/attendance", studentController.getStudentAttendanceReport);
+router.get("/attendance/:id", studentController.getStudentAttendanceReport);
 router.get("/day-plan", studentController.getStudentDayPlan);
 
 // CRUD

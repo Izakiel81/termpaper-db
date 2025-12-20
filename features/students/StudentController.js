@@ -77,10 +77,23 @@ class StudentController {
 
   static async getStudentAttendanceReport(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { studentId, fromDate, toDate } = req.query;
-      const { report } =
-        await studentService.getStudentAttendanceReport(studentId, fromDate, toDate, db);
-      return { report };
+      // Route is /students/attendance/:id
+      // Support either :id path param (preferred) or ?studentId=... (legacy)
+      const studentIdRaw = req.params?.id ?? req.query?.studentId;
+      const parsedStudentId = Number(studentIdRaw);
+      if (!Number.isInteger(parsedStudentId) || parsedStudentId <= 0) {
+        throw new Error("Invalid student id");
+      }
+
+      const { fromDate, toDate } = req.query;
+      const { report } = await studentService.getStudentAttendanceReport(
+        parsedStudentId,
+        fromDate,
+        toDate,
+        db,
+      );
+
+      return { report: report || [] };
     });
   }
 
