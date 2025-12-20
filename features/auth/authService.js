@@ -20,7 +20,7 @@ class AuthService {
     dbUser = dbRes.rows[0];
 
     const rolesResult = await pool.query(
-      `SELECT role_name FROM user_roles WHERE user_id = $1`,
+      `SELECT * FROM get_user_role($1)`,
       [dbUser.user_id],
     );
     const roles = rolesResult.rows.map((r) => r.role_name.toLowerCase());
@@ -58,7 +58,7 @@ class AuthService {
     if (!password) throw new Error("password required");
     try {
       const res = await pool.query(
-        "SELECT fn_register_user($1, $2, $3) AS new_id",
+        "SELECT proc_register_user($1, $2, $3) AS new_id",
         [username, email, password],
       );
       if (res.rowCount === 0) throw new Error("Registration failed");
@@ -113,7 +113,7 @@ class AuthService {
   }
   static async switchRole(userId, targetRole) {
     const rolesResult = await pool.query(
-      `SELECT role_name FROM user_roles WHERE user_id = $1`,
+      `SELECT * FROM get_user_role($1)`,
       [userId],
     );
     const roles = rolesResult.rows.map((r) => r.role_name.toLowerCase());
