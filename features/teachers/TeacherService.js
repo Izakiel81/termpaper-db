@@ -25,9 +25,9 @@ class TeacherService {
     }
   }
 
-  static async getTeachersWithClasses(db = pool) {
+  static async getTeachersWithClasses(teacherId, db = pool) {
     try {
-      const teachers = await TeacherModel.withClasses(db);
+      const teachers = await TeacherModel.withClasses(teacherId, db);
       return { teachers };
     } catch (error) {
       console.error("Service Error in getTeachersWithClasses:", error.message);

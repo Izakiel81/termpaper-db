@@ -24,7 +24,18 @@ class TeacherController {
 
   static async getTeachersWithClasses(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const result = await TeacherService.getTeachersWithClasses(db);
+      const { id } = req.params;
+
+      if (id === undefined || id === null || String(id).trim() === "") {
+        throw new Error("Teacher ID is required");
+      }
+
+      const teacherId = Number(id);
+      if (!Number.isInteger(teacherId) || teacherId <= 0) {
+        throw new Error("Teacher ID must be a positive integer");
+      }
+
+      const result = await TeacherService.getTeachersWithClasses(teacherId, db);
       return result;
     });
   }
