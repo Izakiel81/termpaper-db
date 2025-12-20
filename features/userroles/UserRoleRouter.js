@@ -1,7 +1,11 @@
 import { Router } from "express";
 import UserRoleController from "./UserRoleController.js";
+import authenticateJWT from "../auth/authMiddleware.js";
 
 const router = Router();
+
+// Require auth for all userrole endpoints
+router.use(authenticateJWT);
 
 // Get all roles for a specific user
 router.get("/:userId", UserRoleController.getRolesByUserId);

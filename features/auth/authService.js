@@ -12,7 +12,7 @@ class AuthService {
     const loginIdent = username || email;
     let dbUser = null;
 
-    const dbRes = await pool.query("SELECT * FROM proc_login_user($1, $2)", [
+    const dbRes = await pool.query("SELECT * FROM login_user($1, $2)", [
       loginIdent,
       password,
     ]);

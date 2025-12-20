@@ -15,11 +15,20 @@ export function authenticateJWT(req, res, next) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    if (!payload || !payload.userId || !payload.role_name) {
+    const userId = payload?.userId ?? payload?.user_id ?? payload?.sub;
+    const roleName = payload?.role_name ?? payload?.role;
+
+    if (!payload || !userId || !roleName) {
       return res.status(401).json({ error: "Invalid token payload" });
     }
 
-    req.user = payload;
+    // Normalize fields expected by controllers/helpers.
+    req.user = {
+      ...payload,
+      userId,
+      role: payload?.role ?? roleName,
+      role_name: roleName,
+    };
 
     next();
   } catch (err) {

@@ -16,6 +16,7 @@ import materialRouter from "./materials/MaterialRouter.js";
 import studentDataRouter from "./studentdata/StudentDataRouter.js";
 import timetableRouter from "./timetables/TimetableRouter.js";
 import studentParentRouter from "./studentparents/StudentParentRouter.js";
+import authRouter from "./auth/authRoutes.js";
 
 const router = Router();
 //TODO: Remove temp before shipping
@@ -36,5 +37,6 @@ router.use("/materials", materialRouter);
 router.use("/studentdata", studentDataRouter);
 router.use("/timetables", timetableRouter);
 router.use("/studentparents", studentParentRouter);
+router.use("/auth", authRouter);
 
 export default router;

@@ -22,13 +22,15 @@ class AuthController {
   }
 
   static async refresh(req, res, next) {
-    await bouncer(req, res, async (db) => {
+    try {
       const { refreshToken: oldToken } = req.body || {};
-      if (!oldToken) throw new Error("Missing refresh token");
+      if (!oldToken) return res.status(400).json({ error: "Missing refresh token" });
 
       const newAccessToken = authService.refreshToken(oldToken);
-      return { accessToken: newAccessToken };
-    });
+      return res.json({ accessToken: newAccessToken });
+    } catch (error) {
+      return res.status(401).json({ error: error.message });
+    }
   }
 
   static async me(req, res) {
