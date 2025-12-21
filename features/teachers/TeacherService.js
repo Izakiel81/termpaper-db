@@ -35,6 +35,16 @@ class TeacherService {
     }
   }
 
+  static async getTeachersWithClassesByName(className, db = pool) {
+    try {
+      const teachers = await TeacherModel.withClassesByName(className, db);
+      return { teachers };
+    } catch (error) {
+      console.error("Service Error in getTeachersWithClassesByName:", error.message);
+      throw error;
+    }
+  }
+
   static async getTeacherSalary(teacherId, fromDate, toDate, db = pool) {
     try {
       const salary = await TeacherModel.recieveSalary(

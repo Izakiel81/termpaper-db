@@ -8,6 +8,8 @@ router.get("/", teacherController.getAllTeachers);
 
 // Get teachers with their classes
 router.get("/with-classes/:id", teacherController.getTeachersWithClasses);
+// Get teachers with their classes by class name
+router.get("/with-classes-by-name/:className", teacherController.getTeachersWithClassesByName);
 
 // Teacher salary report
 router.get("/salary", teacherController.getTeacherSalary);

@@ -9,15 +9,22 @@ class ClassController {
     });
   }
 
-  static async getClassById(req, res, next) {
+  static async getClassByName(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { id } = req.params;
+      const { name } = req.params;
 
-      if (!id) {
-        throw new Error("Class ID is required");
+      if (!name) {
+        throw new Error("Class name is required");
       }
 
-      const result = await ClassService.getClassById(id, db);
+      const result = await ClassService.getClassByName(name, db);
+      return result;
+    });
+  }
+
+  static async getClassRatingReport(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const result = await ClassService.getClassRatingReport(db);
       return result;
     });
   }

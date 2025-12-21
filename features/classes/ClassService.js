@@ -12,15 +12,25 @@ class ClassService {
     }
   }
 
-  static async getClassById(classId, db = pool) {
+  static async getClassByName(className, db = pool) {
     try {
-      const classData = await ClassModel.findById(classId, db);
+      const classData = await ClassModel.findByName(className, db);
       if (!classData) {
-        throw new Error(`Class with ID ${classId} not found`);
+        throw new Error(`Class with name ${className} not found`);
       }
       return { class: classData };
     } catch (error) {
-      console.error("Service Error in getClassById:", error.message);
+      console.error("Service Error in getClassByName:", error.message);
+      throw error;
+    }
+  }
+
+  static async getClassRatingReport(db = pool) {
+    try {
+      const report = await ClassModel.findRatingReport(db);
+      return { report };
+    } catch (error) {
+      console.error("Service Error in getClassRatingReport:", error.message);
       throw error;
     }
   }

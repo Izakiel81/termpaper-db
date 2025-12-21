@@ -4,10 +4,11 @@ import ClassController from "./ClassController.js";
 const router = Router();
 
 router.get("/", ClassController.getAllClasses);
-router.get("/:id", ClassController.getClassById);
+router.get("/:name", ClassController.getClassByName);
+router.get("/rate/rating", ClassController.getClassRatingReport);
 router.post("/", ClassController.createClass);
-router.patch("/:id", ClassController.updateClass);
-router.delete("/:id", ClassController.deleteClass);
+router.patch("/:name", ClassController.updateClass);
+router.delete("/:name", ClassController.deleteClass);
 
 export default router;
 

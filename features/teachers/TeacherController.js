@@ -40,6 +40,19 @@ class TeacherController {
     });
   }
 
+  static async getTeachersWithClassesByName(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { className } = req.params;
+
+      if (!className) {
+        throw new Error("Class name is required");
+      }
+
+      const result = await TeacherService.getTeachersWithClassesByName(className, db);
+      return result;
+    });
+  }
+
   static async getTeacherSalary(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { teacherId, fromDate, toDate } = req.query;
