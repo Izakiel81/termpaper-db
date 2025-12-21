@@ -44,18 +44,19 @@ class HomeworkController {
 
   static async createHomework(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { name, description, dueDate, subjectId, classId } = req.body;
+      const { name, teacherId, lessonId, dueDate, description, className } = req.body;
 
-      if (!name || !description || !dueDate || !subjectId || !classId) {
-        throw new Error("name, description, dueDate, subjectId, and classId are required");
+      if (!name || !teacherId || !lessonId || !dueDate || !description || !className) {
+        throw new Error("name, teacherId, lessonId, dueDate, description, and className are required");
       }
 
       const result = await HomeworkService.createHomework(
         name,
-        description,
+        teacherId,
+        lessonId,
         dueDate,
-        subjectId,
-        classId,
+        description,
+        className,
         db,
       );
       return result;
@@ -65,17 +66,20 @@ class HomeworkController {
   static async updateHomework(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { id } = req.params;
-      const { name, description, dueDate } = req.body;
+      const { name, teacherId, lessonId, dueDate, description, className } = req.body;
 
-      if (!id || !name || !description || !dueDate) {
-        throw new Error("id, name, description, and dueDate are required");
+      if (!id || !name || !teacherId || !lessonId || !dueDate || !description || !className) {
+        throw new Error("id, name, teacherId, lessonId, dueDate, description, and className are required");
       }
 
       const result = await HomeworkService.updateHomework(
         id,
         name,
-        description,
+        teacherId,
+        lessonId,
         dueDate,
+        description,
+        className,
         db,
       );
       return result;

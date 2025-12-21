@@ -22,6 +22,19 @@ class LessonController {
     });
   }
 
+  static async getLessonByName(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { name } = req.params;
+
+      if (!name) {
+        throw new Error("Lesson name is required");
+      }
+
+      const result = await LessonService.getLessonByName(name, db);
+      return result;
+    });
+  }
+
   static async createLesson(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { name, className, subjectId, materialId, teacherId, date } =

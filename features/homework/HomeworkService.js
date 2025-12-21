@@ -53,19 +53,21 @@ class HomeworkService {
 
   static async createHomework(
     name,
-    description,
+    teacherId,
+    lessonId,
     dueDate,
-    subjectId,
-    classId,
+    description,
+    className,
     db = pool,
   ) {
     try {
       const homework = await HomeworkModule.create(
         name,
-        description,
+        teacherId,
+        lessonId,
         dueDate,
-        subjectId,
-        classId,
+        description,
+        className,
         db,
       );
       return { homework, message: "Homework created successfully" };
@@ -78,19 +80,22 @@ class HomeworkService {
   static async updateHomework(
     id,
     name,
-    description,
+    teacherId,
+    lessonId,
     dueDate,
+    description,
+    className,
     db = pool,
   ) {
     try {
       const homework = await HomeworkModule.update(
         id,
         name,
-        0,
-        0,
+        teacherId,
+        lessonId,
         dueDate,
         description,
-        '',
+        className,
         db,
       );
       return { homework, message: "Homework updated successfully" };

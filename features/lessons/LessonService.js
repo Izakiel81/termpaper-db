@@ -25,6 +25,19 @@ class LessonService {
     }
   }
 
+  static async getLessonByName(name, db = pool) {
+    try {
+      const lesson = await LessonModule.findByName(name, db);
+      if (!lesson) {
+        throw new Error(`Lesson with name ${name} not found`);
+      }
+      return { lesson };
+    } catch (error) {
+      console.error("Service Error in getLessonByName:", error.message);
+      throw error;
+    }
+  }
+
   static async createLesson(
     name,
     className,
