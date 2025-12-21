@@ -19,13 +19,13 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use((req,res,next)=>{ console.log(req.method, req.originalUrl); next(); });
+
 // Public auth endpoints must be accessible without a Bearer token.
 app.use("/api/auth", authRoutes);
 
 // Everything else under /api requires authentication.
 app.use("/api", authMiddleware, mainRouter);
-
-app.use((req,res,next)=>{ console.log(req.method, req.originalUrl); next(); });
 
 app.listen(PORT, () =>
   console.log("Server is running to get some beer on port " + PORT),

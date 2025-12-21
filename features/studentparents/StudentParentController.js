@@ -18,6 +18,27 @@ class StudentParentController {
     });
   }
 
+  static async getChildren(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { parentId } = req.params;
+      console.log('StudentParentController.getChildren: parentId', parentId);
+
+      if (!parentId) {
+        throw new Error("parentId is required");
+      }
+
+      const result = await StudentParentService.getChildren(
+        parentId,
+        db,
+      );
+      console.log('StudentParentController.getChildren: result', result);
+      // If result is { students: [] }, it means no rows returned.
+      // If result is { students: [...] }, it means rows returned.
+      // The service returns { students: rows }.
+      return result;
+    });
+  }
+
   static async assignParentToStudent(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { studentId, parentId } = req.body;

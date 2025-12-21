@@ -15,6 +15,16 @@ class StudentParentService {
     }
   }
 
+  static async getChildren(parentId, db = pool) {
+    try {
+      const students = await StudentParentModel.findChildren(parentId, db);
+      return { students };
+    } catch (error) {
+      console.error("Service Error in getChildren:", error.message);
+      throw error;
+    }
+  }
+
   static async assignParentToStudent(studentId, parentId, db = pool) {
     try {
       const result = await StudentParentModel.assign(studentId, parentId, db);
