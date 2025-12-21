@@ -26,9 +26,9 @@ class StudentDataController {
     await bouncer(req, res, async (db) => {
       const { journalId, studentId, lesson, mark, status, note } = req.body;
 
-      if (!journalId || !studentId || !lesson || !mark || !status) {
+      if (!journalId || !studentId || !lesson) {
         throw new Error(
-          "journalId, studentId, lesson, mark, and status are required",
+          "journalId, studentId, and lesson are required",
         );
       }
 
@@ -54,12 +54,10 @@ class StudentDataController {
         !id ||
         !journalId ||
         !studentId ||
-        !lesson ||
-        !mark ||
-        !status
+        !lesson
       ) {
         throw new Error(
-          "id, journalId, studentId, lesson, mark, and status are required",
+          "id, journalId, studentId, and lesson are required",
         );
       }
 
