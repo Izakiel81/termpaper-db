@@ -4,52 +4,59 @@ import jwt from "jsonwebtoken";
 const ACCESS_TOKEN_EXPIRES = "1h";
 const REFRESH_TOKEN_EXPIRES = "7d";
 
-class AuthService {
+class AuthService { //and kind of a model too
   static async login(username, email, password) {
     if (!username && !email) throw new Error("username or email required");
     if (!password) throw new Error("password required");
+    
+    try {
+      const loginIdent = username || email;
+      let dbUser = null;
 
-    const loginIdent = username || email;
-    let dbUser = null;
+      const dbRes = await pool.query("SELECT * FROM login_user($1, $2)", [
+        loginIdent,
+        password,
+      ]);
+      if (dbRes.rowCount === 0) throw new Error("Invalid credentials");
+      dbUser = dbRes.rows[0];
 
-    const dbRes = await pool.query("SELECT * FROM login_user($1, $2)", [
-      loginIdent,
-      password,
-    ]);
-    if (dbRes.rowCount === 0) throw new Error("Invalid credentials");
-    dbUser = dbRes.rows[0];
+      const rolesResult = await pool.query(
+        `SELECT * FROM get_user_role($1)`,
+        [dbUser.user_id],
+      );
+      const roles = rolesResult.rows.map((r) => r.role_name.toLowerCase());
+      const primaryRole = roles[0] || "student";
 
-    const rolesResult = await pool.query(
-      `SELECT * FROM get_user_role($1)`,
-      [dbUser.user_id],
-    );
-    const roles = rolesResult.rows.map((r) => r.role_name.toLowerCase());
-    const primaryRole = roles[0] || "student";
+      const payload = {
+        userId: dbUser.user_id,
+        username: dbUser.username,
+        email: dbUser.email,
+        roles: roles,
+        role: primaryRole,
+      };
 
-    const payload = {
-      userId: dbUser.user_id,
-      username: dbUser.username,
-      email: dbUser.email,
-      roles: roles,
-      role: primaryRole,
-    };
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: ACCESS_TOKEN_EXPIRES,
+      });
+      const refreshToken = jwt.sign(
+        { userId: payload.userId, roles: payload.roles },
+        process.env.REFRESH_SECRET,
+        { expiresIn: REFRESH_TOKEN_EXPIRES },
+      );
 
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: ACCESS_TOKEN_EXPIRES,
-    });
-    const refreshToken = jwt.sign(
-      { userId: payload.userId, roles: payload.roles },
-      process.env.REFRESH_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRES },
-    );
-
-    return {
-      accessToken,
-      refreshToken,
-      roles,
-      role: primaryRole,
-      user: { id: payload.userId, username: payload.username },
-    };
+      return {
+        accessToken,
+        refreshToken,
+        roles,
+        role: primaryRole,
+        user: { id: payload.userId, username: payload.username },
+      };
+    } catch (error) {
+      if (error.code === "28P01") {
+        throw new Error("Invalid credentials");
+      }
+      throw new Error(error.message || "Login failed");
+    }
   }
 
   static async register(username, email, password) {
@@ -89,6 +96,12 @@ class AuthService {
         user: { id: newId, username },
       };
     } catch (error) {
+      if (error.code === "23505") {
+        throw new Error(`Username or email '${username}' already exists.`);
+      }
+      if (error.code === "23514") {
+        throw new Error(`Username or email cannot be empty`);
+      }
       throw new Error(error);
     }
   }

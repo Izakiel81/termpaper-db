@@ -1,3 +1,4 @@
+-- THOSE FUNCTIONS WERE NOT RAN, PLANNED FOR AFTER DEPLOYMENT
 -- RBAC grants for DUITZ termpaper database
 -- Run this script as a database owner / superuser in pgAdmin.
 -- Assumptions:

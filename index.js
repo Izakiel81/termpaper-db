@@ -7,12 +7,12 @@ import authRoutes from "./features/auth/authRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-if (!process.env.JWT_SECRET) console.warn('[server] WARNING: JWT_SECRET not set');
-if (!process.env.REFRESH_SECRET) console.warn('[server] WARNING: REFRESH_SECRET not set');
+if (!process.env?.JWT_SECRET) console.warn('[server] WARNING: JWT_SECRET not set');
+if (!process.env?.REFRESH_SECRET) console.warn('[server] WARNING: REFRESH_SECRET not set');
 
-// Configure CORS - allow the frontend dev server by default
+// Allow the frontend dev server by default
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend origin
+  origin: "http://localhost:5173", // frontend origin
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
