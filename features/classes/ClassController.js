@@ -22,6 +22,18 @@ class ClassController {
     });
   }
 
+  static async getClassAbsentReport(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { name, amount } = req.params;
+      if (!name || !amount) {
+        throw new Error("Class name and amount are required");
+      }
+
+      const result = await ClassService.getClassAbsentReport(name, amount, db);
+      return result;
+    });
+  }
+
   static async getClassRatingReport(req, res, next) {
     await bouncer(req, res, async (db) => {
       const result = await ClassService.getClassRatingReport(db);

@@ -55,7 +55,7 @@ class TeacherController {
 
   static async getTeacherSalary(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { teacherId, fromDate, toDate } = req.query;
+      const { teacherId, fromDate, toDate } = req.params;
 
       if (!teacherId || !fromDate || !toDate) {
         throw new Error("teacherId, fromDate, and toDate are required");

@@ -12,7 +12,7 @@ router.get("/with-classes/:id", teacherController.getTeachersWithClasses);
 router.get("/with-classes-by-name/:className", teacherController.getTeachersWithClassesByName);
 
 // Teacher salary report
-router.get("/salary", teacherController.getTeacherSalary);
+router.get("/salary/:teacherId/:fromDate/:toDate", teacherController.getTeacherSalary);
 
 // Get teacher by ID
 router.get("/:id", teacherController.getTeacherById);

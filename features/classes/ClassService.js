@@ -25,6 +25,16 @@ class ClassService {
     }
   }
 
+  static async getClassAbsentReport(className, amount, db = pool) {
+    try {
+      const report = await ClassModel.findAbsentReport(className, amount, db);
+      return { report };
+    } catch (error) {
+      console.error("Service Error in getClassAbsentReport:", error.message);
+      throw error;
+    }
+  }
+
   static async getClassRatingReport(db = pool) {
     try {
       const report = await ClassModel.findRatingReport(db);
