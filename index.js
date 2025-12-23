@@ -5,14 +5,24 @@ import authMiddleware from "./features/auth/authMiddleware.js";
 import authRoutes from "./features/auth/authRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 if (!process.env?.JWT_SECRET) console.warn('[server] WARNING: JWT_SECRET not set');
 if (!process.env?.REFRESH_SECRET) console.warn('[server] WARNING: REFRESH_SECRET not set');
 
 // Allow the frontend dev server by default
 app.use(cors({
-  origin: "http://localhost:5173", // frontend origin
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // curl / Postman
+
+    if (
+      origin.startsWith("http://localhost:5173") ||
+      origin.startsWith("http://26.195.249.136:5173")
+    ) {
+      return callback(null, true);
+    }
+    callback(new Error('CORS not allowed'), false);
+  },
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
@@ -27,6 +37,9 @@ app.use("/api/auth", authRoutes);
 // Everything else under /api requires authentication.
 app.use("/api", authMiddleware, mainRouter);
 
-app.listen(PORT, () =>
-  console.log("Server is running to get some beer on port " + PORT),
-);
+app.listen(5000, '0.0.0.0', () => {
+  console.log('API running to get beer on all local interfaces');
+  console.log(`Server is running to get some beer on port ${PORT}`);
+  console.log(`Local instances can be accessed at: http://localhost:${PORT}/api`);
+});
+
