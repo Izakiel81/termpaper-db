@@ -25,14 +25,13 @@ class ParentService {
     }
   }
 
-  static async createParent(name, surname, patronym, phone, user_id = null, db = pool) {
+  static async createParent(name, surname, patronym, phone, db = pool) {
     try {
       const parentId = await ParentModel.create(
         name,
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return { parentId, message: "Parent created successfully" };
@@ -48,7 +47,6 @@ class ParentService {
     surname,
     patronym,
     phone,
-    user_id = null,
     db = pool,
   ) {
     try {
@@ -58,7 +56,6 @@ class ParentService {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return { message: "Parent updated successfully" };

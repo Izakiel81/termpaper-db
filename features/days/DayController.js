@@ -24,13 +24,12 @@ class DayController {
 
   static async createDay(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { dayName, dayTime, dayWeekday } = req.body;
-
-      if (!dayName || !dayTime || !dayWeekday) {
-        throw new Error("dayName, dayTime, and dayWeekday are required");
+      const { subjectId, timetableId, dayTime, dayWeekday } = req.body;
+      if (!subjectId || !timetableId || !dayTime || !dayWeekday) {
+        throw new Error("subjectId, timetableId, dayTime, and dayWeekday are required");
       }
 
-      const result = await DayService.createDay(dayName, dayTime, dayWeekday, db);
+      const result = await DayService.createDay(subjectId, timetableId, dayTime, dayWeekday, db);
       return result;
     });
   }
@@ -38,15 +37,16 @@ class DayController {
   static async updateDay(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { id } = req.params;
-      const { dayName, dayTime, dayWeekday } = req.body;
+      const { subjectId, timetableId, dayTime, dayWeekday } = req.body;
 
-      if (!id || !dayName || !dayTime || !dayWeekday) {
-        throw new Error("id, dayName, dayTime, and dayWeekday are required");
+      if (!id || !subjectId || !timetableId || !dayTime || !dayWeekday) {
+        throw new Error("id, subjectId, timetableId, dayTime, and dayWeekday are required");
       }
 
       const result = await DayService.updateDay(
         id,
-        dayName,
+        subjectId,
+        timetableId,
         dayTime,
         dayWeekday,
         db,

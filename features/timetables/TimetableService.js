@@ -25,9 +25,9 @@ class TimetableService {
     }
   }
 
-  static async createTimetable(name, classId, db = pool) {
+  static async createTimetable(name, class_name, db = pool) {
     try {
-      const timetable = await TimetableModel.create(name, classId, db);
+      const timetable = await TimetableModel.create(name, class_name, db);
       return { timetable, message: "Timetable created successfully" };
     } catch (error) {
       console.error("Service Error in createTimetable:", error.message);
@@ -35,9 +35,9 @@ class TimetableService {
     }
   }
 
-  static async updateTimetable(timetableId, name, classId, db = pool) {
+  static async updateTimetable(timetableId, name, class_name, db = pool) {
     try {
-      const timetable = await TimetableModel.update(timetableId, name, classId, db);
+      const timetable = await TimetableModel.update(timetableId, name, class_name, db);
       return { timetable, message: "Timetable updated successfully" };
     } catch (error) {
       console.error("Service Error in updateTimetable:", error.message);

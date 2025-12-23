@@ -12,6 +12,16 @@ class UserRoleService {
     }
   }
 
+  static async getAllUserRoles(db = pool) {
+    try {
+      const roles = await UserRoleModel.getAllUserRoles(db);
+      return { roles };
+    } catch (error) {
+      console.error("Service Error in getAllUserRoles:", error.message);
+      throw error;
+    }
+  }
+
   static async assignRole(userId, roleId, db = pool) {
     try {
       const result = await UserRoleModel.assignRole(userId, roleId, db);

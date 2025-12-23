@@ -45,9 +45,9 @@ class ClassService {
     }
   }
 
-  static async updateClass(journalId, name, mainTeacherId, db = pool) {
+  static async updateClass(name, journalId, mainTeacherId, newName, db = pool) {
     try {
-      const classData = await ClassModel.update(journalId, name, mainTeacherId, db);
+      const classData = await ClassModel.update(name, journalId, mainTeacherId, newName, db);
       return { class: classData, message: "Class updated successfully" };
     } catch (error) {
       console.error("Service Error in updateClass:", error.message);
@@ -55,9 +55,9 @@ class ClassService {
     }
   }
 
-  static async deleteClass(journalId, db = pool) {
+  static async deleteClass(name, db = pool) {
     try {
-      const result = await ClassModel.delete(journalId, db);
+      const result = await ClassModel.delete(name, db);
       return result;
     } catch (error) {
       console.error("Service Error in deleteClass:", error.message);

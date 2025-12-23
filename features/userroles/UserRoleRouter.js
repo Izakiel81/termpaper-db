@@ -7,6 +7,8 @@ const router = Router();
 // Require auth for all userrole endpoints
 router.use(authenticateJWT);
 
+router.get("/", UserRoleController.getAllUserRoles);
+
 // Get all roles for a specific user
 router.get("/:userId", UserRoleController.getRolesByUserId);
 

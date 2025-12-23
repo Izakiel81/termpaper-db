@@ -24,13 +24,13 @@ class TimetableController {
 
   static async createTimetable(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { name, classId } = req.body;
+      const { name, class_name } = req.body;
 
-      if (!name || !classId) {
-        throw new Error("name and classId are required");
+      if (!name || !class_name) {
+        throw new Error("name and class_name are required");
       }
 
-      const result = await TimetableService.createTimetable(name, classId, db);
+      const result = await TimetableService.createTimetable(name, class_name, db);
       return result;
     });
   }
@@ -38,13 +38,13 @@ class TimetableController {
   static async updateTimetable(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { id } = req.params;
-      const { name, classId } = req.body;
+      const { name, class_name } = req.body;
 
-      if (!id || !name || !classId) {
-        throw new Error("id, name, and classId are required");
+      if (!id || !name || !class_name) {
+        throw new Error("id, name, and class_name are required");
       }
 
-      const result = await TimetableService.updateTimetable(id, name, classId, db);
+      const result = await TimetableService.updateTimetable(id, name, class_name, db);
       return result;
     });
   }

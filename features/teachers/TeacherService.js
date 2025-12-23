@@ -60,14 +60,13 @@ class TeacherService {
     }
   }
 
-  static async createTeacher(name, surname, patronym, phone, user_id, db = pool) {
+  static async createTeacher(name, surname, patronym, phone, db = pool) {
     try {
       const teacherId = await TeacherModel.create(
         name,
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return { teacherId, message: "Teacher created successfully" };
@@ -83,7 +82,6 @@ class TeacherService {
     surname,
     patronym,
     phone,
-    user_id,
     db = pool,
   ) {
     try {
@@ -93,7 +91,6 @@ class TeacherService {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return { message: "Teacher updated successfully" };

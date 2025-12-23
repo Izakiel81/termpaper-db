@@ -24,7 +24,7 @@ class ParentController {
 
   static async createParent(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { name, surname, patronym, phone, user_id } = req.body;
+  const { name, surname, patronym, phone } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
         throw new Error("name, surname, patronym, and phone are required");
@@ -35,7 +35,6 @@ class ParentController {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return result;
@@ -44,8 +43,8 @@ class ParentController {
 
   static async updateParent(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { id } = req.params;
-      const { name, surname, patronym, phone, user_id } = req.body;
+  const { id } = req.params;
+  const { name, surname, patronym, phone } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
         throw new Error("id, name, surname, patronym, and phone are required");
@@ -57,7 +56,6 @@ class ParentController {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return result;

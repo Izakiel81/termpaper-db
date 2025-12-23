@@ -15,6 +15,13 @@ class UserRoleController {
     });
   }
 
+  static async getAllUserRoles(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const roles = await UserRoleService.getAllUserRoles(db);
+      return roles;
+    });
+  }
+
   static async assignRole(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { userId, roleId } = req.body;

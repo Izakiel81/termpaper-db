@@ -115,7 +115,6 @@ class StudentServives {
     patronym,
     phone,
     class_c,
-    user_id = null,
     db = pool,
   ) {
     try {
@@ -125,7 +124,6 @@ class StudentServives {
         patronym,
         phone,
         class_c,
-        user_id,
         db,
       );
 
@@ -141,7 +139,6 @@ class StudentServives {
     patronym,
     phone,
     class_c,
-    user_id,
     db = pool,
   ) {
     try {
@@ -152,7 +149,6 @@ class StudentServives {
         patronym,
         phone,
         class_c,
-        user_id,
         db,
       );
     } catch (error) {

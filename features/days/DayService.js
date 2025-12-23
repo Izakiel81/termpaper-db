@@ -25,9 +25,9 @@ class DayService {
     }
   }
 
-  static async createDay(dayName, dayTime, dayWeekday, db = pool) {
+  static async createDay(subjectID, timetableId, dayTime, dayWeekday, db = pool) {
     try {
-      const dayId = await DayModule.create(dayName, dayTime, dayWeekday, db);
+      const dayId = await DayModule.create(subjectID, timetableId, dayTime, dayWeekday, db);
       return { dayId, message: "Day created successfully" };
     } catch (error) {
       console.error("Service Error in createDay:", error.message);
@@ -35,9 +35,9 @@ class DayService {
     }
   }
 
-  static async updateDay(dayId, dayName, dayTime, dayWeekday, db = pool) {
+  static async updateDay(dayId, subjectId, timetableId, dayTime, dayWeekday, db = pool) {
     try {
-      await DayModule.update(dayId, dayName, dayTime, dayWeekday, db);
+      await DayModule.update(dayId, subjectId, timetableId, dayTime, dayWeekday, db);
       return { message: "Day updated successfully" };
     } catch (error) {
       console.error("Service Error in updateDay:", error.message);

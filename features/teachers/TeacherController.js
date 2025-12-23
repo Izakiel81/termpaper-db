@@ -73,7 +73,7 @@ class TeacherController {
 
   static async createTeacher(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { name, surname, patronym, phone, user_id } = req.body;
+  const { name, surname, patronym, phone } = req.body;
 
       if (!name || !surname || !patronym || !phone) {
         throw new Error("name, surname, patronym, and phone are required");
@@ -84,7 +84,6 @@ class TeacherController {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return result;
@@ -93,8 +92,8 @@ class TeacherController {
 
   static async updateTeacher(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { id } = req.params;
-      const { name, surname, patronym, phone, user_id } = req.body;
+  const { id } = req.params;
+  const { name, surname, patronym, phone } = req.body;
 
       if (!id || !name || !surname || !patronym || !phone) {
         throw new Error("id, name, surname, patronym, and phone are required");
@@ -106,7 +105,6 @@ class TeacherController {
         surname,
         patronym,
         phone,
-        user_id,
         db,
       );
       return result;

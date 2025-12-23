@@ -49,27 +49,26 @@ class ClassController {
 
   static async updateClass(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { id } = req.params;
-      const { name, mainTeacherId } = req.body;
+      const { name, journalId, mainTeacherId, newName } = req.body;
 
-      if (!id || !name || !mainTeacherId) {
-        throw new Error("id, name, and mainTeacherId are required");
+      if (!name || !mainTeacherId) {
+        throw new Error("name, and mainTeacherId are required");
       }
 
-      const result = await ClassService.updateClass(id, name, mainTeacherId, db);
+      const result = await ClassService.updateClass(name, journalId, mainTeacherId, newName, db);
       return result;
     });
   }
 
   static async deleteClass(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { id } = req.params;
+      const { name } = req.params;
 
-      if (!id) {
-        throw new Error("Class ID is required");
+      if (!name) {
+        throw new Error("Class name is required");
       }
 
-      const result = await ClassService.deleteClass(id, db);
+      const result = await ClassService.deleteClass(name, db);
       return result;
     });
   }

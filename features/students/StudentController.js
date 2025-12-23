@@ -120,7 +120,6 @@ class StudentController {
         patronym,
         phone,
         class_c,
-        user_id,
         db,
       );
       return { newStudent };
@@ -128,7 +127,7 @@ class StudentController {
   }
   static async updateStudent(req, res, next) {
     await bouncer(req, res, async (db) => {
-      const { name, surname, patronym, phone, class_c, user_id } = req.body;
+      const { name, surname, patronym, phone, class_c } = req.body;
       const id = req.params.id || req.body.id;
 
       if (!id || !name || !surname || !patronym || !phone) {
@@ -142,7 +141,6 @@ class StudentController {
         patronym,
         phone,
         class_c,
-        user_id,
         db,
       );
       return { message: "Student has been successfully changed" };
