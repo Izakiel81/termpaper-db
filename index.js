@@ -16,8 +16,9 @@ app.use(cors({
     if (!origin) return callback(null, true); // curl / Postman
 
     if (
-      origin.startsWith("http://localhost:5173") ||
-      origin.startsWith("http://26.195.249.136:5173")
+      origin.startsWith("http://localhost:5174") || // Vite dev server
+      origin.startsWith("http://localhost:5173") || // Another common Vite port
+      origin.startsWith("http://192.168.0.133:5173") 
     ) {
       return callback(null, true);
     }
