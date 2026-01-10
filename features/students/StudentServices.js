@@ -45,6 +45,14 @@ class StudentServives {
       console.error({ error: error.message });
     }
   }
+  static async getStudentPerformanceMatrix(studentId, db = pool) {
+    try {
+      const students = await StudentModel.studentPerformanceMatrix(studentId, db);
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
+  }
 
   // Functions
 

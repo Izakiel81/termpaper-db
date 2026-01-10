@@ -8,6 +8,7 @@ router.get("/", studentController.getStudents);
 router.get("/avg-above-7", studentController.getStudentsAVGAbove7);
 router.get("/class", studentController.getStudentsByClass);
 router.get("/ranking", studentController.getStudentRanking);
+router.get("/performance-matrix/:studentId", studentController.getStudentPerformanceMatrix);
 router.get("/by-parent/:parentId", studentController.getStudentsByParent);
 router.get("/grades-and-absences/:id", studentController.getStudentGradeAndAbsences);
 router.get("/marks", studentController.getStudentMarks);

@@ -77,8 +77,6 @@ class StudentController {
 
   static async getStudentAttendanceReport(req, res, next) {
     await bouncer(req, res, async (db) => {
-      // Route is /students/attendance/:id
-      // Support either :id path param (preferred) or ?studentId=... (legacy)
       const studentIdRaw = req.params?.id ?? req.query?.studentId;
       const parsedStudentId = Number(studentIdRaw);
       if (!Number.isInteger(parsedStudentId) || parsedStudentId <= 0) {
@@ -94,6 +92,17 @@ class StudentController {
       );
 
       return { report: report || [] };
+    });
+  }
+
+  static async getStudentPerformanceMatrix(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { studentId } = req.params;
+      const { students } = await studentService.getStudentPerformanceMatrix(studentId, db);
+      if (!students) {
+        throw new Error("Student performance matrix not found");
+      }
+      return { students };
     });
   }
 
