@@ -35,29 +35,53 @@ class LessonController {
     });
   }
 
+  static async getLessonsByTeacher(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { teacherId } = req.params;
+
+      if (!teacherId) {
+        throw new Error("Teacher ID is required");
+      }
+
+      const result = await LessonService.getLessonsByTeacher(teacherId, db);
+      return result;
+    });
+  }
+
+  static async getLessonsByTeacherAndName(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { teacherId, name } = req.params;
+
+      if (!teacherId) {
+        throw new Error("Teacher ID is required");
+      }
+
+      const result = await LessonService.getLessonsByTeacherAndName(teacherId, name, db);
+      return result;
+    });
+  }
+
   static async createLesson(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { name, className, subjectId, materialId, teacherId, date } =
         req.body;
 
       if (
-        !name ||
         !className ||
         !subjectId ||
-        !materialId ||
         !teacherId ||
         !date
       ) {
         throw new Error(
-          "name, className, subjectId, materialId, teacherId, and date are required",
+          "className, subjectId, teacherId, and date are required",
         );
       }
 
       const result = await LessonService.createLesson(
-        name,
+        name || null,
         className,
         subjectId,
-        materialId,
+        materialId || null,
         teacherId,
         date,
         db,
@@ -74,24 +98,22 @@ class LessonController {
 
       if (
         !id ||
-        !name ||
         !className ||
         !subjectId ||
-        !materialId ||
         !teacherId ||
         !date
       ) {
         throw new Error(
-          "id, name, className, subjectId, materialId, teacherId, and date are required",
+          "id, className, subjectId, teacherId, and date are required",
         );
       }
 
       const result = await LessonService.updateLesson(
         id,
-        name,
+        name || null,
         className,
         subjectId,
-        materialId,
+        materialId || null,
         teacherId,
         date,
         db,

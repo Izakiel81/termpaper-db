@@ -46,8 +46,11 @@ class ClassService {
   }
 
   static async createClass(name, journalId, mainTeacherId, db = pool) {
+    if (!name) {
+      throw new Error("name is required");
+    }
     try {
-      const classData = await ClassModel.create(name, journalId, mainTeacherId, db);
+      const classData = await ClassModel.create(name, journalId || null, mainTeacherId || null, db);
       return { class: classData, message: "Class created successfully" };
     } catch (error) {
       console.error("Service Error in createClass:", error.message);

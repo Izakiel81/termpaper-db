@@ -26,14 +26,14 @@ class ParentController {
     await bouncer(req, res, async (db) => {
   const { name, surname, patronym, phone } = req.body;
 
-      if (!name || !surname || !patronym || !phone) {
-        throw new Error("name, surname, patronym, and phone are required");
+      if (!name || !surname || !phone) {
+        throw new Error("name, surname, and phone are required");
       }
 
       const result = await ParentService.createParent(
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
         db,
       );
@@ -46,15 +46,15 @@ class ParentController {
   const { id } = req.params;
   const { name, surname, patronym, phone } = req.body;
 
-      if (!id || !name || !surname || !patronym || !phone) {
-        throw new Error("id, name, surname, patronym, and phone are required");
+      if (!id || !name || !surname || !phone) {
+        throw new Error("id, name, surname, and phone are required");
       }
 
       const result = await ParentService.updateParent(
         id,
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
         db,
       );

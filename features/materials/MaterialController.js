@@ -26,14 +26,14 @@ class MaterialController {
     await bouncer(req, res, async (db) => {
       const { name, description, link } = req.body;
 
-      if (!name || !description || !link) {
-        throw new Error("name, description, and link are required");
+      if (!name) {
+        throw new Error("name is required");
       }
 
       const result = await MaterialService.createMaterial(
         name,
-        description,
-        link,
+        description || null,
+        link || null,
         db,
       );
       return result;
@@ -45,15 +45,15 @@ class MaterialController {
       const { id } = req.params;
       const { name, description, link } = req.body;
 
-      if (!id || !name || !description || !link) {
-        throw new Error("id, name, description, and link are required");
+      if (!id || !name) {
+        throw new Error("id and name are required");
       }
 
       const result = await MaterialService.updateMaterial(
         id,
         name,
-        description,
-        link,
+        description || null,
+        link || null,
         db,
       );
       return result;

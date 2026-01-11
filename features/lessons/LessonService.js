@@ -38,6 +38,32 @@ class LessonService {
     }
   }
 
+  static async getLessonsByTeacher(teacherId, db = pool) {
+    try {
+      if (!teacherId) {
+        throw new Error("Teacher ID must be provided");
+      }
+      const lessons = await LessonModule.findByTeacher(teacherId, db);
+      return { lessons };
+    } catch (error) {
+      console.error("Service Error in getLessonsByTeacher:", error.message);
+      throw error;
+    }
+  }
+
+  static async getLessonsByTeacherAndName(teacherId, name, db = pool) {
+    try {
+      if (!teacherId) {
+        throw new Error("Teacher ID must be provided");
+      }
+      const lessons = await LessonModule.findByTeacherAndName(teacherId, name, db);
+      return { lessons };
+    } catch (error) {
+      console.error("Service Error in getLessonsByTeacherAndName:", error.message);
+      throw error;
+    }
+  }
+
   static async createLesson(
     name,
     className,
@@ -47,12 +73,22 @@ class LessonService {
     date,
     db = pool,
   ) {
+    if (
+      !className ||
+      !subjectId ||
+      !teacherId ||
+      !date
+    ) {
+      throw new Error(
+        "className, subjectId, teacherId, and date are required",
+      );
+    }
     try {
       const lessonId = await LessonModule.create(
-        name,
+        name || null,
         className,
         subjectId,
-        materialId,
+        materialId || null,
         teacherId,
         date,
         db,
@@ -74,13 +110,24 @@ class LessonService {
     date,
     db = pool,
   ) {
+    if (
+        !lessonId ||
+        !className ||
+        !subjectId ||
+        !teacherId ||
+        !date
+      ) {
+        throw new Error(
+          "lessonId, className, subjectId, teacherId, and date are required",
+        );
+      }
     try {
       await LessonModule.update(
         lessonId,
-        name,
+        name || null,
         className,
         subjectId,
-        materialId,
+        materialId || null,
         teacherId,
         date,
         db,

@@ -45,14 +45,14 @@ class ClassController {
     await bouncer(req, res, async (db) => {
       const { name, journalId, mainTeacherId } = req.body;
 
-      if (!name || !journalId || !mainTeacherId) {
-        throw new Error("name, journalId, and mainTeacherId are required");
+      if (!name) {
+        throw new Error("name is required");
       }
 
       const result = await ClassService.createClass(
         name,
-        journalId,
-        mainTeacherId,
+        journalId || null,
+        mainTeacherId || null,
         db,
       );
       return result;
@@ -63,11 +63,11 @@ class ClassController {
     await bouncer(req, res, async (db) => {
       const { name, journalId, mainTeacherId, newName } = req.body;
 
-      if (!name || !mainTeacherId) {
-        throw new Error("name, and mainTeacherId are required");
+      if (!name) {
+        throw new Error("name is required");
       }
 
-      const result = await ClassService.updateClass(name, journalId, mainTeacherId, newName, db);
+      const result = await ClassService.updateClass(name, journalId || null, mainTeacherId || null, newName, db);
       return result;
     });
   }

@@ -123,12 +123,17 @@ class StudentController {
     await bouncer(req, res, async (db) => {
       const { name, surname, patronym, phone, class_c } = req.body;
       const user_id = req.user.userId;
+
+      if (!name || !surname || !phone) {
+        throw new Error("name, surname, and phone are required");
+      }
+
       const newStudent = await studentService.addStudent(
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
-        class_c,
+        class_c || null,
         db,
       );
       return { newStudent };
@@ -139,17 +144,17 @@ class StudentController {
       const { name, surname, patronym, phone, class_c } = req.body;
       const id = req.params.id || req.body.id;
 
-      if (!id || !name || !surname || !patronym || !phone) {
-        throw new Error("id, name, surname, patronym, and phone are required");
+      if (!id || !name || !surname || !phone) {
+        throw new Error("id, name, surname, and phone are required");
       }
 
       await studentService.updateStudent(
         id,
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
-        class_c,
+        class_c || null,
         db,
       );
       return { message: "Student has been successfully changed" };

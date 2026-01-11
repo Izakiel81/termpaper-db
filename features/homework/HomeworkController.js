@@ -46,13 +46,13 @@ class HomeworkController {
     await bouncer(req, res, async (db) => {
       const { name, teacherId, lessonId, dueDate, description, className } = req.body;
 
-      if (!name || !teacherId || !lessonId || !dueDate || !description || !className) {
-        throw new Error("name, teacherId, lessonId, dueDate, description, and className are required");
+      if (!teacherId || !lessonId || !dueDate || !description || !className) {
+        throw new Error("teacherId, lessonId, dueDate, description, and className are required");
       }
 
       const result = await HomeworkService.createHomework(
-        name,
-        teacherId,
+        name || null,
+        teacherId || null,
         lessonId,
         dueDate,
         description,
@@ -68,14 +68,14 @@ class HomeworkController {
       const { id } = req.params;
       const { name, teacherId, lessonId, dueDate, description, className } = req.body;
 
-      if (!id || !name || !teacherId || !lessonId || !dueDate || !description || !className) {
-        throw new Error("id, name, teacherId, lessonId, dueDate, description, and className are required");
+      if (!id || !teacherId || !lessonId || !dueDate || !description || !className) {
+        throw new Error("id, teacherId, lessonId, dueDate, description, and className are required");
       }
 
       const result = await HomeworkService.updateHomework(
         id,
-        name,
-        teacherId,
+        name || null,
+        teacherId || null,
         lessonId,
         dueDate,
         description,

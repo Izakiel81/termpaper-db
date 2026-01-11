@@ -34,14 +34,19 @@ class StudentDataService {
     note,
     db = pool,
   ) {
+    if (!journalId || !studentId || !lesson) {
+      throw new Error(
+        "journalId, studentId, and lesson are required",
+      );
+    }
     try {
       const studentDataId = await StudentDataModule.create(
         journalId,
         studentId,
         lesson,
-        mark,
+        mark || null,
         status,
-        note,
+        note || null,
         db,
       );
       return { studentDataId, message: "Student data created successfully" };
@@ -61,15 +66,25 @@ class StudentDataService {
     note,
     db = pool,
   ) {
+    if (
+        !studentDataId ||
+        !journalId ||
+        !studentId ||
+        !lesson
+      ) {
+        throw new Error(
+          "studentDataId, journalId, studentId, and lesson are required",
+        );
+      }
     try {
       await StudentDataModule.update(
         studentDataId,
         journalId,
         studentId,
         lesson,
-        mark,
+        mark || null,
         status,
-        note,
+        note || null,
         db,
       );
       return { message: "Student data updated successfully" };

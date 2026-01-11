@@ -26,11 +26,14 @@ class ParentService {
   }
 
   static async createParent(name, surname, patronym, phone, db = pool) {
+    if (!name || !surname || !phone) {
+      throw new Error("name, surname, and phone are required");
+    }
     try {
       const parentId = await ParentModel.create(
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
         db,
       );
@@ -49,12 +52,15 @@ class ParentService {
     phone,
     db = pool,
   ) {
+    if (!parentId || !name || !surname || !phone) {
+      throw new Error("id, name, surname, and phone are required");
+    }
     try {
       await ParentModel.update(
         parentId,
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
         db,
       );

@@ -60,9 +60,12 @@ class HomeworkService {
     className,
     db = pool,
   ) {
+    if (!teacherId || !lessonId || !dueDate || !description || !className) {
+      throw new Error("teacherId, lessonId, dueDate, description, and className are required");
+    }
     try {
       const homework = await HomeworkModule.create(
-        name,
+        name || null,
         teacherId,
         lessonId,
         dueDate,
@@ -87,10 +90,13 @@ class HomeworkService {
     className,
     db = pool,
   ) {
+    if (!id || !teacherId || !lessonId || !dueDate || !description || !className) {
+      throw new Error("id, teacherId, lessonId, dueDate, description, and className are required");
+    }
     try {
       const homework = await HomeworkModule.update(
         id,
-        name,
+        name || null,
         teacherId,
         lessonId,
         dueDate,

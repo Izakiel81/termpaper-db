@@ -13,8 +13,11 @@ class SubjectService {
   }
 
   static async createSubject(name, program, db = pool) {
+    if (!name) {
+      throw new Error("name is required");
+    }
     try {
-      const subject = await SubjectsModel.create(name, program, db);
+      const subject = await SubjectsModel.create(name, program || null, db);
       return { subject, message: "Subject created successfully" };
     } catch (error) {
       console.error("Service Error in createSubject:", error.message);

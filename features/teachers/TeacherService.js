@@ -61,11 +61,14 @@ class TeacherService {
   }
 
   static async createTeacher(name, surname, patronym, phone, db = pool) {
+    if (!name || !surname || !phone) {
+      throw new Error("name, surname, and phone are required");
+    }
     try {
       const teacherId = await TeacherModel.create(
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
         db,
       );
@@ -76,23 +79,12 @@ class TeacherService {
     }
   }
 
-  static async updateTeacher(
-    teacherId,
-    name,
-    surname,
-    patronym,
-    phone,
-    db = pool,
-  ) {
+  static async updateTeacher(id, name, surname, patronym, phone, db = pool) {
+    if (!id || !name || !surname || !phone) {
+      throw new Error("id, name, surname, and phone are required");
+    }
     try {
-      await TeacherModel.update(
-        teacherId,
-        name,
-        surname,
-        patronym,
-        phone,
-        db,
-      );
+      await TeacherModel.update(id, name, surname, patronym || null, phone, db);
       return { message: "Teacher updated successfully" };
     } catch (error) {
       console.error("Service Error in updateTeacher:", error.message);

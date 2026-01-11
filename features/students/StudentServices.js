@@ -125,13 +125,16 @@ class StudentServives {
     class_c,
     db = pool,
   ) {
+    if (!name || !surname || !phone) {
+      throw new Error("name, surname, and phone are required");
+    }
     try {
       const newStudent = await StudentModel.create(
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
-        class_c,
+        class_c || null,
         db,
       );
 
@@ -149,14 +152,17 @@ class StudentServives {
     class_c,
     db = pool,
   ) {
+    if (!id || !name || !surname || !phone) {
+      throw new Error("id, name, surname, and phone are required");
+    }
     try {
-      await StudentModel.update(
+      const student = await StudentModel.update(
         id,
         name,
         surname,
-        patronym,
+        patronym || null,
         phone,
-        class_c,
+        class_c || null,
         db,
       );
     } catch (error) {

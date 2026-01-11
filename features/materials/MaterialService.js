@@ -26,8 +26,11 @@ class MaterialService {
   }
 
   static async createMaterial(name, description, link, db = pool) {
+    if (!name) {
+      throw new Error("name is required");
+    }
     try {
-      const materialId = await MaterialModule.create(name, description, link, db);
+      const materialId = await MaterialModule.create(name, description || null, link || null, db);
       return { materialId, message: "Material created successfully" };
     } catch (error) {
       console.error("Service Error in createMaterial:", error.message);
@@ -36,8 +39,11 @@ class MaterialService {
   }
 
   static async updateMaterial(materialId, name, description, link, db = pool) {
+    if (!materialId || !name) {
+      throw new Error("id and name are required");
+    }
     try {
-      await MaterialModule.update(materialId, name, description, link, db);
+      await MaterialModule.update(materialId, name, description || null, link || null, db);
       return { message: "Material updated successfully" };
     } catch (error) {
       console.error("Service Error in updateMaterial:", error.message);

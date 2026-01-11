@@ -13,11 +13,11 @@ class SubjectController {
     await bouncer(req, res, async (db) => {
       const { name, program } = req.body;
 
-      if (!name || !program) {
-        throw new Error("name and program are required");
+      if (!name) {
+        throw new Error("name is required");
       }
 
-      const result = await SubjectService.createSubject(name, program, db);
+      const result = await SubjectService.createSubject(name, program || null, db);
       return result;
     });
   }
