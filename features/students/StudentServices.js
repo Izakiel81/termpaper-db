@@ -176,5 +176,14 @@ class StudentServives {
       console.error({ error: error.message });
     }
   }
+
+  static async getMonthlyMarks(studentId, month) {
+    // If needed, we can do extra validation here on the 'month' param
+    const marks = await StudentModel.monthlyMarks(studentId, month);
+
+    // We can group or process data here if the UI needs a specific shape first,
+    // but the requirement implies returning the raw list for the grid.
+    return marks;
+  }
 }
 export default StudentServives;

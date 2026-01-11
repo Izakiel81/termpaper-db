@@ -167,5 +167,22 @@ class StudentController {
       return { message: "Student has been successfully deleted" };
     });
   }
+
+  static async getMonthlyMarks(req, res) {
+    try {
+      const studentId = parseInt(req.params.studentId);
+      const { month } = req.query; // Expect ?month=2023-10-01 or similar
+
+      if (isNaN(studentId)) {
+        return res.status(400).json({ message: "Invalid student ID format" });
+      }
+
+      const marks = await studentService.getMonthlyMarks(studentId, month);
+      res.status(200).json(marks);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error.message });
+    }
+  }
 }
 export default StudentController;
