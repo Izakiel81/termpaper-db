@@ -40,8 +40,8 @@ class UserController {
       const { id } = req.params;
       const { username, email, password } = req.body;
 
-      if (!id || !username || !email || !password) {
-        throw new Error("id, username, email, and password are required");
+      if (!id || !username || !email) {
+        throw new Error("id, username, and email are required");
       }
 
       const result = await UserService.updateUser(id, username, email, password, db);

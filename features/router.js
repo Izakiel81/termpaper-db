@@ -18,6 +18,7 @@ import timetableRouter from "./timetables/TimetableRouter.js";
 import studentParentRouter from "./studentparents/StudentParentRouter.js";
 import authRouter from "./auth/authRoutes.js";
 import debugRouter from "./debug/DebugRouter.js";
+import auditLogRouter from "./auditlogs/AuditLogRouter.js";
 
 const router = Router();
 //TODO: Remove temp before shipping
@@ -40,5 +41,6 @@ router.use("/timetables", timetableRouter);
 router.use("/studentparents", studentParentRouter);
 router.use("/auth", authRouter);
 router.use("/debug", debugRouter);
+router.use("/auditlogs", auditLogRouter);
 
 export default router;

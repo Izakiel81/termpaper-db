@@ -12,12 +12,39 @@ class SubjectService {
     }
   }
 
-  static async createSubject(name, program, db = pool) {
+  static async getSubjectById(subjectId, db = pool) {
+    try {
+      const subject = await SubjectsModel.findById(subjectId, db);
+      if (!subject) {
+        throw new Error(`Subject with ID ${subjectId} not found`);
+      }
+
+      return { subject };
+    } catch (error) {
+      console.error("Service Error in getSubjectById:", error.message);
+      throw error;
+    }
+  }
+  static async updateSubject(subjectId, { name, program, cabinet }, db = pool) {
+    try {
+      const updatedSubject = await SubjectsModel.update(subjectId, name, program, cabinet, db);
+      if (!updatedSubject) {
+        throw new Error(`Subject with ID ${subjectId} not found`);
+      }
+
+      return { subject: updatedSubject };
+    } catch (error) {
+      console.error("Service Error in updateSubject:", error.message);
+      throw error;
+    }
+  }
+
+  static async createSubject(name, program, cabinet, db = pool) {
     if (!name) {
       throw new Error("name is required");
     }
     try {
-      const subject = await SubjectsModel.create(name, program || null, db);
+      const subject = await SubjectsModel.create(name, program || null, cabinet || 100, db);
       return { subject, message: "Subject created successfully" };
     } catch (error) {
       console.error("Service Error in createSubject:", error.message);
