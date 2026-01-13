@@ -5,6 +5,7 @@ const router = Router();
 
 // Specific routes first (avoid matching :id)
 router.get("/", studentController.getStudents);
+router.get("/m", studentController.getStudentsM);
 router.get("/avg-above-7", studentController.getStudentsAVGAbove7);
 router.get("/class", studentController.getStudentsByClass);
 router.get("/ranking", studentController.getStudentRanking);

@@ -8,6 +8,13 @@ class StudentController {
     });
   }
 
+  static async getStudentsM(req, res, next) {
+    await bouncer(req, res, async (db) => {
+      const { students } = await studentService.getStudentsM(db);
+      return { students };
+    });
+  }
+
   static async getStudentById(req, res, next) {
     await bouncer(req, res, async (db) => {
       const { id } = req.params;

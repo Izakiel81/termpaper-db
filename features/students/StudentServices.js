@@ -10,6 +10,15 @@ class StudentServives {
     }
   }
 
+  static async getStudentsM(db = pool) {
+    try {
+      const students = await StudentModel.findAllM(db);
+      return { students };
+    } catch (error) {
+      console.error({ error: error.message });
+    }
+  }
+
   static async getStudentById(id, db = pool) {
     try {
       const student = await StudentModel.findById(id, db);
