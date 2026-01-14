@@ -9,6 +9,9 @@ class AuthService { //and kind of a model too
     if (!username && !email) throw new Error("username or email required");
     if (!password) throw new Error("password required");
     
+    // Debug logging
+    console.log(`[AuthService] Attempting login for: ${username || email}`);
+
     try {
       const loginIdent = username || email;
       let dbUser = null;
@@ -19,6 +22,9 @@ class AuthService { //and kind of a model too
       ]);
       if (dbRes.rowCount === 0) throw new Error("Invalid credentials");
       dbUser = dbRes.rows[0];
+
+      // Debug success
+      console.log(`[AuthService] Login successful for user_id: ${dbUser.user_id}`);
 
       const rolesResult = await pool.query(
         `SELECT * FROM get_user_role($1)`,
@@ -52,6 +58,7 @@ class AuthService { //and kind of a model too
         user: { id: payload.userId, username: payload.username },
       };
     } catch (error) {
+      console.error(`[AuthService] Login error:`, error);
       if (error.code === "28P01") {
         throw new Error("Invalid credentials");
       }
